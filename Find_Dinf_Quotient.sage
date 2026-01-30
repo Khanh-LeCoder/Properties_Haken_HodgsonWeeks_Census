@@ -33,12 +33,12 @@ def substitute(word,hom):
                 new_word += hom[2][::-1]
     return new_word
 
-def sub_relation(relation,hom):
+def sub_relation(relations,hom):
     """
     Input: A list of relations and a candidate homomorphism
     Output: A list of images of the relations under the homorphism
     """
-    return [substitute(word,hom) for word in relation]
+    return [substitute(word,hom) for word in relations]
 
 def reduce_dihedral(word):
     """
@@ -55,11 +55,37 @@ def reduce_dihedral(word):
     return word
 
 def candidate_hom(num_generators):
+    """
+    Input: 
+    Output:
+    """
     if num_generators == 2:
         return [["x","y"],["x","xy"],["xy","x"]]
     else:
-        return [["y","x","x"],["x","y","x"],["x","x","y"]] + [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]] 
-                
+        return [["y","x","x"],["x","y","x"],["x","x","y"]] + [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]]
+
+def is_trivial(word):
+    if len(word) == 0:
+        return True
+    else:
+        return False
+
+def is_relations_hold(hom_relations):
+    """
+    Input: the set relations after applying the homomorphism
+    Output: True if all relations are trivial
+    """
+    check = True
+    for word in hom_relations:
+        check = check and is_trivial(reduce_dihedral(word))
+    return check
+
+def is_Dinfty_quotient(name):
+    M = snappy.Manifold(name)
+    G = M.fundamental_group()
+    num_generators = len(G.generators())
+
+
   
 
 
