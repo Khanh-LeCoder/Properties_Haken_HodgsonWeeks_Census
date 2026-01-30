@@ -9,18 +9,28 @@ def substitute(word,hom):
     new_word = ""
     if length(hom) == 2:
         for letter in word:
-            if letter == 'a':
+            if letter == "a":
                 new_word += hom[0]
-            else:
+            elif letter == "A":
+                new_word += hom[0][::-1]
+            elif letter == "b":
                 new_word += hom[1]
-    if length(hom) == 3:
+            elif letter == "B":
+                new_word += hom[1][::-1]
+    else length(hom) == 3:
         for letter in word:
-            if letter == 'a':
+            if letter == "a":
                 new_word += hom[0]
-            elif letter == 'b':
+            elif letter == "A":
+                new_word += hom[0][::-1]
+            elif letter == "b":
                 new_word += hom[1]
-            else:
+            elif letter == "B":
+                new_word += hom[1][::-1]
+            elif letter == "c":
                 new_word += hom[2]
+            elif letter == "C":
+                new_word += hom[2][::-1]
     return new_word
                 
   
