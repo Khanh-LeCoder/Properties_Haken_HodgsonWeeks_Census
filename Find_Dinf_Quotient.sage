@@ -65,6 +65,10 @@ def candidate_hom(num_generators):
         return [["y","x","x"],["x","y","x"],["x","x","y"]] + [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]]
 
 def is_trivial(word):
+    """
+    Input: A word
+    Output: True if the word is empty False otherwise
+    """
     if len(word) == 0:
         return True
     else:
@@ -84,6 +88,9 @@ def is_Dinfty_quotient(name):
     M = snappy.Manifold(name)
     G = M.fundamental_group()
     num_generators = len(G.generators())
+    hom_list = candidate_hom(num_generators)
+
+    
 
 
   
