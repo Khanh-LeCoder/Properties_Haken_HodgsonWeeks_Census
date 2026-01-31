@@ -1,5 +1,34 @@
 import snappy 
+from multiprocessing import Process, Queue
 import time
+
+def _worker(func, args, kwargs, queue):
+    try:
+        result = func(*args, **kwargs)
+        queue.put(("result", result))
+    except Exception as e:
+        queue.put(("error", e))
+
+
+def run_with_timeout(func, timeout, *args, **kwargs):
+    queue = Queue()
+    process = Process(
+        target=_worker,
+        args=(func, args, kwargs, queue)
+    )
+
+    process.start()
+    process.join(timeout)
+
+    if process.is_alive():
+        process.terminate()
+        process.join()
+        raise TimeoutError(f"Function exceeded {timeout} seconds")
+
+    status, value = queue.get()
+    if status == "error":
+        raise value
+    return value
 
 def SL2_char_var_ideals(name):
     """
@@ -10,11 +39,10 @@ def SL2_char_var_ideals(name):
     print(name)
     M = snappy.Manifold(name)
     G = M.fundamental_group()
-    start_time = time.time()
-    for _ in range(120):
-        if time.time() - start_time > timeout:
-            break
-        return G.character_variety_vars_and_polys('as_ideal')
-        time.sleep(1)
+    try:
+        result = run_with_timeout(SL2_char_var_ideals(name), timeout=60)
+        print(result)
+    except TimeoutError as e:
+        print("Timed out!")
 
 
