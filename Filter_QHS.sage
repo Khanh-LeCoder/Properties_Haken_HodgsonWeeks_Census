@@ -74,7 +74,7 @@ def filter_QHS3(file_name):
   """
   mfld_list = read_name(file_name)
 
-  return [name for name in mfld_list if is_QHS3(name):]
+  return [name for name in mfld_list if is_QHS3(name)]
   
   
 def write_QHS3(file_name):
