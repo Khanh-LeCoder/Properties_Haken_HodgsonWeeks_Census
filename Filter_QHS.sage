@@ -32,7 +32,7 @@ def is_QHS3(name):
   if M.homology().betti_number() == 0: 
     return True
   else:
-    pass
+    return False
 
 def elem_div_factor(name):
   """
@@ -66,12 +66,21 @@ def is_deg2cover_zero_b1(name):
     return True
   else:
     return False
+
+def filter_QHS3(file_name):
+  """
+  Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
+  Output: The list of names of 3-manifolds from the file_name that are QHS3.
+  """
+  mfld_list = read_name(file_name)
+
+  return [name for name in mfld_list if is_QHS3(name):]
   
   
 def write_QHS3(file_name):
   """
   Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
-  Output: The list of names of 3-manifolds from the file_name that are QHS3.
+  Output: The list of names of 3-manifolds from the file_name that are QHS3 together with other data
   """
   
   mfld_list = read_name(file_name)
