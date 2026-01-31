@@ -41,7 +41,7 @@ def SL2_char_var_ideals(name):
     return I
 
 try:
-    result = run_with_timeout(SL2_char_var_ideals(name), timeout=2)
+    result = run_with_timeout(SL2_char_var_ideals, timeout=2,name)
     print(result)
 except TimeoutError as e:
     print("Timed out!")
