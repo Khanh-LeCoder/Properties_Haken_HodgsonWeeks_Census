@@ -241,6 +241,13 @@ def run_with_timeout(func, *args, timeout):
         raise value
     return value
 
+def find_nth_occurrence(str, char, n):
+    start = str.find(char)
+    while start >= 0 and n > 1:
+        start = str.find(char, start + len(char)) # Use len(ch) for substrings
+        n -= 1
+    return start
+
 def SL2_char_var_ideals(name):
     """
     Input:  The name of a manifold from the Hodson Weeks census
@@ -257,13 +264,13 @@ def SL2_char_var_dim(ideal_char):
 for data in EQN_List:
     name = data[0]
     ideal_char = data[1]
-    print(name)
     if ideal_char == "Time out!":
         with open("SL2_Char_Var_Dim.txt","a") as open_file:
             open_file.write(name + " " + "Equation timed out!\n")    
     else:
         try:
             result = run_with_timeout(SL2_char_var_dim,ideal_char, timeout=5)
+            print(result)
             with open("SL2_Char_Var_Dim.txt","a") as open_file:
                 open_file.write(name + " " + str(result) + "\n")
         except TimeoutError as e:
@@ -272,13 +279,6 @@ for data in EQN_List:
         except RuntimeError:
             with open("SL2_Char_Var_Dim.txt","a") as open_file:
                 open_file.write(name + " " + "Dimension error!\n")
-
-def find_nth_occurrence(str, char, n):
-    start = str.find(char)
-    while start >= 0 and n > 1:
-        start = str.find(char, start + len(char)) # Use len(ch) for substrings
-        n -= 1
-    return start
 
 with open("Haken_QHS3_data.txt", "r") as open_file1:
     line_lists1 = open_file1.readlines()
