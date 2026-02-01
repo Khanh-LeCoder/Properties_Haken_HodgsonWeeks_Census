@@ -43,21 +43,22 @@ def SL2_char_var_ideals(name):
 def SL2_char_var_dim(ideal):
     return I
 
-try:
-    for data in EQN_List:
-        name = data[0]
-        ideal = data[1]
-        if data == "Timed out!":
+for data in EQN_List:
+    name = data[0]
+    ideal = data[1]
+    print(name)
+    if ideal == "Timed out!":
+        with open("SL2_Char_Var_Dim","a") as open_file:
+            open_file.write("name" + " " + "Equation timed out!\n")    
+    else:
+        try:
+            result = run_with_timeout(SL2_char_var_dim,ideal, timeout=5)
             with open("SL2_Char_Var_Dim","a") as open_file:
-                open_file.write("name" + " " + "Timed out!\n")    
-        else:
-            try:
-                result = run_with_timeout(SL2_char_var_dim,ideal, timeout=2)
-                with open("SL2_Char_Var_Dim","a") as open_file:
-                    open_file.write("name" + " " + str(result))
-            except TimeoutError as e:
-                with open("SL2_Char_Var_Dim","a") as open_file:
-                    open_file.write("name" + " " + "Timed out!\n")
+                open_file.write("name" + " " + str(result))
+        except TimeoutError as e:
+            with open("SL2_Char_Var_Dim","a") as open_file:
+                open_file.write("name" + " " + "Dimension timed out!\n")
+   
     
 
 
