@@ -1,5 +1,5 @@
 import snappy
-# import Filter_QHS3.sage
+import Filter_QHS3.sage
 
 def substitute(word,hom):
     """
