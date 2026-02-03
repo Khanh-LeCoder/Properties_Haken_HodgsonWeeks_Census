@@ -7,4 +7,5 @@ For each Haken QH$S^3$ $M$ from the list, we compute
 1. The volume of $M$
 2. The homology of $M$
 3. Whether or not $\pi_1(M)$ admits an infinite dihedral quotient
-4. The dimension of the character variety of $\pi_1(M)$
+4. The dimension of the $SL_2(C)$-character variety of $\pi_1(M)$
+5. If the dimension of the $SL_2(C)$-character variety of $\pi_1(M)$ is zero, then whether or not there exists algebraic non-integral characters.
