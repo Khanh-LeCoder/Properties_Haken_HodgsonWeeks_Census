@@ -9,3 +9,5 @@ For each Haken QH$S^3$ $M$ from the list, we compute
 3. Whether or not $\pi_1(M)$ admits an infinite dihedral quotient
 4. The dimension of the $SL_2(C)$-character variety of $\pi_1(M)$
 5. If the dimension of the $SL_2(C)$-character variety of $\pi_1(M)$ is zero, then whether or not there exists algebraic non-integral characters.
+
+We note that the computations involving the $SL_2(C)$-character variety is time-consuming. To be able to handle a large number of examples, we set a timeout = 60s for the process of computing the ideal defining the character variety and of computing the dimension of the character variety. If      
