@@ -31,6 +31,15 @@ def is_QHS3(name):
   M = snappy.Manifold(name)
   return M.homology().betti_number() == 0
 
+def filter_QHS3(file_name):
+  """
+  Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
+  Output: The list of names of 3-manifolds from the file_name that are QHS3.
+  """
+  mfld_list = read_name(file_name)
+
+  return [name for name in mfld_list if is_QHS3(name)]
+
 """
 The following functions are used to test whether pi1 has infinite dihedral quotient  
 """
@@ -67,15 +76,6 @@ def is_deg2cover_zero_b1(name):
     return True
   else:
     return False
-
-def filter_QHS3(file_name):
-  """
-  Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
-  Output: The list of names of 3-manifolds from the file_name that are QHS3.
-  """
-  mfld_list = read_name(file_name)
-
-  return [name for name in mfld_list if is_QHS3(name)]
 
 def substitute(word,hom):
     """
@@ -130,7 +130,15 @@ def reduce_dihedral(word):
             word = word[:index] + word[index + 2:]
     return word
 
-def 
+def s3_permutations(tup):
+    """
+    Input:  A list of length 3
+    Output: A list of all permutations of the original list
+    """
+    a = tup[0]
+    b = tup[1]
+    c = tup[2]
+    return [[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,b,a]]
 
 def candidate_hom(num_generators):
     """
@@ -144,9 +152,13 @@ def candidate_hom(num_generators):
         return [["x","y"],["x","xy"],["xy","x"]]
     else:
         # currently missing some cases where the image of a generator is trivial. 
-        # Case 1: one generator dies
-        one_gen_trivial = [["x","y",""],["x","","y"],["y","x",""],["y","","x"],["","x","y"],["","y","x"]] + [["x","xy",""],["x","","xy"]]
-        return [["x","y",""],["y","x","x"],["x","y","x"],["x","x","y"]] + [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]]
+        # Case 1: one generator dies.
+        # Either both are mapped to order-two elements or one order-two element and one infinite order element. 
+        one_gen_trivial = s3_permutations(["x","y",""]) + s3_permutations(["x","xy",""])
+        # Case 2: no generator dies. There are a few cases: 
+        # All order-two, two order-two, or one order two-way 
+        no_gen_trivial = s3_permutations(["x","x","y"]) + s3_permutations(["xy","x","x"]) 
+        return [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]]
 def is_trivial(word):
     """
     Input: A word
