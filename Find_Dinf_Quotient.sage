@@ -1,5 +1,6 @@
 import snappy
-import Filter_QHS3.sage
+
+def has_all_finite_dihedral_quotients()
 
 def substitute(word,hom):
     """

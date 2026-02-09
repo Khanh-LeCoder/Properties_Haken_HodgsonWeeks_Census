@@ -1,5 +1,8 @@
 import snappy
 
+INITIAL_HAKEN_FILE = "HakenList.txt"
+FINAL_FILE_NAME = "Haken_QHS3_Data.md"
+
 """
 Starting with a list of Haken 3-manifolds from the Hodgson-Weeks census, find all QHS^3 and store them in the file "Haken_QHS3_Data.md"
 """
@@ -40,6 +43,27 @@ def filter_QHS3(file_name):
 
   return [name for name in mfld_list if is_QHS3(name)]
 
+def write_QHS3(file_name):
+    """
+    Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
+    Output: The list of names of 3-manifolds from the file_name that are QHS3
+    """
+  
+    mfld_list = read_name(file_name)
+  
+    with open(FINAL_FILE_NAME, "w") as open_file:
+        open_file.write("| Name | Volume | Homology | Dihedral Quotient | Large SL2C Char. Var. | Algebraic Non-integral |\n|---|---|---|---|---|---|\n")
+
+    for name in mfld_list:
+        if is_QHS3(name):
+            M = snappy.Manifold(name)
+            volume = str(M.volume())
+            homology = str(M.homology())
+            with open(FINAL_FILE_NAME, "a") as open_file: 
+                open_file.write("| " + name + " | " + volume + " | " + homology + " | "  + " | " + " | " + " |\n")
+
+write_QHS3(INITIAL_HAKEN_FILE)
+    
 """
 The following functions are used to test whether pi1 has infinite dihedral quotient  
 """
@@ -156,9 +180,10 @@ def candidate_hom(num_generators):
         # Either both are mapped to order-two elements or one order-two element and one infinite order element. 
         one_gen_trivial = s3_permutations(["x","y",""]) + s3_permutations(["x","xy",""])
         # Case 2: no generator dies. There are a few cases: 
-        # All order-two, two order-two, or one order two-way 
-        no_gen_trivial = s3_permutations(["x","x","y"]) + s3_permutations(["xy","x","x"]) 
-        return [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]]
+        # All order-two, two order-two, or one order-two elements.
+        no_gen_trivial = s3_permutations(["x","x","y"]) + s3_permutations(["x","x","xy"]) + s3_permutations(["x","y","xy"]) + s3_permutations(["x","y","yx"]) + s3_permutations(["x","xy","xy"]) + s3_permutations(["x","xy","yx"]) 
+        return 
+
 def is_trivial(word):
     """
     Input: A word
@@ -197,7 +222,14 @@ def is_Dinfty_quotient(name):
 
     return check 
 
-def write_QHS3(file_name):
+def write_Dihedral(file_name):
+    """
+    Input:  The name of the final data file
+    Output: Update the file with information about whether the fundamental group of the manifold admits an infinite dihedral quotients
+    """
+    
+
+def write_QHS3_data(file_name):
   """
   Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
   Output: The list of names of 3-manifolds from the file_name that are QHS3 together with other data
@@ -226,7 +258,7 @@ def write_QHS3(file_name):
       else:  
         with open("Haken_QHS3_data.txt", "a") as open_file: 
           open_file.write("| " + name + " | " + volume + " | " + homology + " | " + "No" + " | " + " |\n")
-write_QHS3("HakenList.txt")
+write_QHS3_data("HakenList.txt")
 
 """
 The following functions are used to compute the ideal of character variety of pi1
