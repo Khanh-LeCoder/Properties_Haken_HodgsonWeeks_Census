@@ -1,7 +1,6 @@
 import snappy
 
 
-    
 """
 The following functions are used to test whether pi1 has infinite dihedral quotient  
 """
@@ -274,13 +273,6 @@ with open("Haken_QHS3_data.txt", "r") as open_file1:
 
 with open("SL2_Char_Var_Dim.txt", "r") as open_file2:
     line_lists2 = open_file2.readlines()
-
-def find_nth_occurrence(str, char, n):
-    start = str.find(char)
-    while start >= 0 and n > 1:
-        start = str.find(char, start + len(char)) # Use len(ch) for substrings
-        n -= 1
-    return start
 
 with open("Haken_QHS3_final_data.txt", "w") as open_file:
         open_file.write("| Name | Volume | Homology | Dihedral Quotient | Dim SL2C Char. Var. | Algebraic Non-integral |\n|---|---|---|---|---|---|\n")

@@ -1,8 +1,7 @@
 import snappy
-import sage
 from Filter_QHS import *
 
-UPPER_BOUND = 100
+UPPER_BOUND = 20
 HAKEN_QHS_DIHEDRAL_FILE = "HakenQHS_Dihedral_Data.txt"
 
 def has_all_finite_dihedral_quotients(name,upper_bound):
@@ -13,14 +12,17 @@ def has_all_finite_dihedral_quotients(name,upper_bound):
     """
     # Initialize the manifold and its fundamental group
     M = snappy.Manifold(name)
-    G = M.fundamental_group().sage().gap()
+    G = gap(M.fundamental_group().gap_string())
 
     check = True
-    for p in prime_range(1,upper_bound):
+    for p in primes(1,upper_bound):
         if check == True:
-            D = sage.DihedralGroup(p) # The dihedral group of order 2p
-            check = check and (len(G.GQuotients(D)) > 0)
-
+            D = DihedralGroup(p) # The dihedral group of order 2p
+            try:
+                epi_to_D = G.GQuotients(D)
+                check = check and (len(epi_to_D) > 0)
+            except RuntimeError:
+                check = True
     return check
 
 def finite_dihedral_test(file_name):
@@ -29,7 +31,7 @@ def finite_dihedral_test(file_name):
 
     # Write heading of the table
     with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
-        open_file.write("| Name | Finite Dihedral Test | Quotient Search |\n|---|---|---|\n")
+        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Homomorphism |\n|---|---|---|---|\n")
 
     # Initialize the count of QHS for which the test rules OUT the infinite dihedral quotient
     count = 0
@@ -38,11 +40,43 @@ def finite_dihedral_test(file_name):
         if has_all_finite_dihedral_quotients(name, UPPER_BOUND) == False:
             count += 1
             with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
-                open_file.write("| " + name + " | No D_inf quotient | |\n")
+                open_file.write("| " + name + " | No D_inf quotient | | |\n")
         else:
             with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
-                open_file.write("| " + name + " | Maybe | |\n")
+                open_file.write("| " + name + " | Maybe | | |\n")
     print("There are", count, "QHS without finite dihedral quotient of order 2p for p <", UPPER_BOUND, ".\n" )
+
+###########################
+
+def sum_b1_deg2cover(name):
+    """
+    Input: The name of a 3-manifold
+    Output: The sum of the betti number of all degree two cover
+    """
+    # Initialize M and compute all of its degree 2 covers
+    M = snappy.Manifold(name)
+    cov2 = M.covers(2)
+
+    # compute the sum of b1 of all degree 2 cover of M
+    sum_b1 = 0
+    if len(cov2) > 0:
+        for N in cov2:
+            sum_b1 += N.homology().betti_number()
+    return sum_b1
+
+def is_pos_b1_deg2cover(name):
+    return sum_b1_deg2cover(name) > 0
+
+def degree2_cover_test(file_name):
+    # Initialize the list of QHS
+    qhs_list = read_name(file_name)
+
+    # Write heading of the table
+    with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
+        open_file.write("| Name | Finite Dihedral Test | Double Cover Test |\n|---|---|---|\n")
+
+
+############################
 
 def substitute(word,hom):
     """

@@ -47,7 +47,7 @@ def filter_QHS3(file_name):
 
 def write_QHS3(file_name):
     """
-    Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
+    Input:  The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
     Output: The list of names of 3-manifolds from the file_name that are QHS3 and return the total number of QHS
     """
 
@@ -59,3 +59,17 @@ def write_QHS3(file_name):
                 count += 1
                 open_file.write(name + "\n")
     print("There are", count, "Haken QHS.\n")
+
+def find_nth_column(str, n):
+    """
+    Find the nth column of a table by looking for the nth occurrence of "|" in str
+    Input:  A string str, a char and, a positive integer n
+    Output: The index in the str of the nth occurrence of char
+    """
+    start = str.find("|")
+    while start >= 0 and n > 1:
+        start = str.find("|", start + 1)
+        n -= 1
+    return start
+
+def write_in_column(str, content, n)
