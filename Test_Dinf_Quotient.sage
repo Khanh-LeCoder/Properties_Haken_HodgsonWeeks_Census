@@ -1,4 +1,8 @@
 import snappy
+from Filter_QHS import *
+
+NUM_PRIMES = 25
+HAKEN_QHS_DIHEDRAL_FILE = "HakenQHS_Dihedral_Data.txt"
 
 def has_all_finite_dihedral_quotients(name,num_primes):
     """
@@ -21,6 +25,25 @@ def has_all_finite_dihedral_quotients(name,num_primes):
 
     return check
 
+def finite_dihedral_test(file_name):
+    # Initialize the list of QHS
+    qhs_list = read_name(file_name)
+
+    # Write heading of the table
+    with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
+        open_file.write("| Name | Finite Dihedral Test | Quotient Search |\n|---|---|---|\n")
+
+    # Initialize the count of QHS for which the test rules OUT the infinite dihedral quotient
+    count = 0
+    for name in qhs_list:
+        if has_all_finite_dihedral_quotients(name, NUM_PRIMES) == False:
+            count += 1
+            with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
+                open_file.write("| " + name + " | No D_inf quotient | |\n")
+        else:
+            with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
+                open_file.write("| " + name + " | Maybe | |\n")
+    return count
 
 
 def substitute(word,hom):

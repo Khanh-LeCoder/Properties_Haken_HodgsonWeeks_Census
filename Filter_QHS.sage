@@ -4,9 +4,7 @@ INITIAL_HAKEN_FILE = "Haken_List.txt"
 HAKEN_QHS_FILE = "Haken_QHS_List.txt"
 FINAL_FILE_NAME = "Haken_QHS3_Data.md"
 
-
 # Starting with a list of Haken 3-manifolds from the Hodgson-Weeks census, find all QHS^3 and store them in the file "Haken_QHS_List.txt"
-
 
 def read_name(file_name):
     """
@@ -50,14 +48,15 @@ def filter_QHS3(file_name):
 def write_QHS3(file_name):
     """
     Input: The name of the file containing the list of 3-manifolds from the census. Assume they are all orientable
-    Output: The list of names of 3-manifolds from the file_name that are QHS3
+    Output: The list of names of 3-manifolds from the file_name that are QHS3 and return the total number of QHS
     """
 
     mfld_list = read_name(file_name)
-
+    count = 0
     with open(HAKEN_QHS_FILE, "a") as open_file:
         for name in mfld_list:
             if is_QHS3(name):
+                count += 1
                 open_file.write(name + "\n")
-
+    return count
 write_QHS3(INITIAL_HAKEN_FILE)
