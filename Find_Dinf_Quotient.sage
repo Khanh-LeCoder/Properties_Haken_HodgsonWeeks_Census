@@ -1,6 +1,5 @@
 import snappy
 
-def has_all_finite_dihedral_quotients()
 
 def substitute(word,hom):
     """
