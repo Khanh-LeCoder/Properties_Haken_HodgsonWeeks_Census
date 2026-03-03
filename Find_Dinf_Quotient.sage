@@ -1,5 +1,27 @@
 import snappy
+from sympy.combinatorics import DihedralGroup
 
+
+def has_all_finite_dihedral_quotients(name,num_primes):
+    """
+    This function tests if the fundamental group of a manifold has all finite dihedral quotients of order 2p for all num_primes initial primes p.
+    Input:  The SnapPy name of the manifold and the number of primes p for which the test will be performed
+    Output: True if the fundamental group of the manifold has all finite dihedral quotients of order 2p for all num_primes initial primes p.
+    """
+    # Initialize the manifold and its fundamental group
+    M = snappy.Manifold(name)
+    G = M.fundamental_group().sage().gap()
+
+    # Initialize the list of num_primes initial primes
+    primes_list = Primes()[:num_primes]
+
+    check = True
+    for p in primes_list:
+        if check == True:
+            D = DihedralGroup(2*p)
+            check = check and (len(G.GQuotients(D)) > 0)
+
+    return check
 
 def substitute(word,hom):
     """
