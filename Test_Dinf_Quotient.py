@@ -78,6 +78,20 @@ def degree2_cover_test(file_name):
     with open(file_name, "w") as open_file:
         open_file.readlines("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
 
+    for name in qhs_list:
+        print(name)
+        index_of_name = qhs_list.index()
+        line = original_content[index_of_name]
+        index_of_col = find_nth_occurrence(line,"|",3)
+        count = 0
+        if is_pos_b1_deg2cover(name) == False:
+            count += 1
+            with open(file_name, "a") as open_file:
+                open_file.write(line[:index_of_col+2] + "No D_inf quotient" + line[index_of_col+1:])
+        else:
+            with open(file_name, "a") as open_file:
+                open_file.write(line[:index_of_col+2] + "Maybe" + line[index_of_col+1:])
+        print("There are", count, "QHS ruled out by testing the double covers.\n")
 
 
 ############################

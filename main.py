@@ -3,3 +3,4 @@ from Test_Dinf_Quotient import *
 
 write_QHS3(INITIAL_HAKEN_FILE)
 finite_dihedral_test(HAKEN_QHS_FILE)
+degree2_cover_test(HAKEN_QHS_DIHEDRAL_FILE)
