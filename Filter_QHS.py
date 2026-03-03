@@ -60,16 +60,14 @@ def write_QHS3(file_name):
                 open_file.write(name + "\n")
     print("There are", count, "Haken QHS.\n")
 
-def find_nth_column(str, n):
+def find_nth_occurrence(str, char, n):
     """
-    Find the nth column of a table by looking for the nth occurrence of "|" in str
+    Find the nth occurrence of char in str
     Input:  A string str, a char and, a positive integer n
     Output: The index in the str of the nth occurrence of char
     """
-    start = str.find("|")
+    start = str.find(char)
     while start >= 0 and n > 1:
-        start = str.find("|", start + 1)
+        start = str.find(char, start + len(char))
         n -= 1
     return start
-
-def write_in_column(str, content, n)

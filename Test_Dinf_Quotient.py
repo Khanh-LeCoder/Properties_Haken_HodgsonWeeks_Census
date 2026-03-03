@@ -31,7 +31,7 @@ def finite_dihedral_test(file_name):
 
     # Write heading of the table
     with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
-        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Homomorphism |\n|---|---|---|---|\n")
+        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
 
     # Initialize the count of QHS for which the test rules OUT the infinite dihedral quotient
     count = 0
@@ -68,12 +68,16 @@ def is_pos_b1_deg2cover(name):
     return sum_b1_deg2cover(name) > 0
 
 def degree2_cover_test(file_name):
-    # Initialize the list of QHS
-    qhs_list = read_name(file_name)
+    # read the content of HAKEN_QHS_DIHEDRAL_FILE
+    with open(file_name, "r") as open_file:
+        original_content = open_file.readlines()
 
-    # Write heading of the table
-    with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
-        open_file.write("| Name | Finite Dihedral Test | Double Cover Test |\n|---|---|---|\n")
+    qhs_list = [line[find_nth_occurrence(line," ",1)+1:find_nth_occurrence(line," ",2)] for line in original_content[2:]]
+
+    # Write heading of the table. The content of the file is overwritten here
+    with open(file_name, "w") as open_file:
+        open_file.readlines("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
+
 
 
 ############################
