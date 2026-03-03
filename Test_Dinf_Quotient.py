@@ -43,8 +43,7 @@ def finite_dihedral_test(file_name):
         else:
             with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
                 open_file.write("| " + name + " | Maybe | |\n")
-    return count
-
+    print("There are", count, "QHS without finite dihedral using the first", NUM_PRIMES, "primes.\n" )
 
 def substitute(word,hom):
     """

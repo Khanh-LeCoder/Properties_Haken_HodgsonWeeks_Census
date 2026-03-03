@@ -58,5 +58,4 @@ def write_QHS3(file_name):
             if is_QHS3(name):
                 count += 1
                 open_file.write(name + "\n")
-    return count
-write_QHS3(INITIAL_HAKEN_FILE)
+    print("There are", count, "Haken QHS.\n")
