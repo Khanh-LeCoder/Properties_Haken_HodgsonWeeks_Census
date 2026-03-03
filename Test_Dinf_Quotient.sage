@@ -1,6 +1,4 @@
 import snappy
-from sympy.combinatorics import DihedralGroup
-
 
 def has_all_finite_dihedral_quotients(name,num_primes):
     """
@@ -18,10 +16,12 @@ def has_all_finite_dihedral_quotients(name,num_primes):
     check = True
     for p in primes_list:
         if check == True:
-            D = DihedralGroup(2*p)
+            D = DihedralGroup(p) # The dihedral group of order 2p
             check = check and (len(G.GQuotients(D)) > 0)
 
     return check
+
+
 
 def substitute(word,hom):
     """
