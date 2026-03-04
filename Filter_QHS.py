@@ -53,6 +53,11 @@ def write_QHS3(file_name):
 
     mfld_list = read_name(file_name)
     count = 0
+
+    # Ensuring that the file is empty to begin with
+    with open(HAKEN_QHS_FILE, "w") as open_file:
+        pass
+
     with open(HAKEN_QHS_FILE, "a") as open_file:
         for name in mfld_list:
             if is_QHS3(name):
