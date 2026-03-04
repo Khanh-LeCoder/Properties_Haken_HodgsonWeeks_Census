@@ -28,7 +28,7 @@ def has_all_finite_dihedral_quotients(name,upper_bound):
 def finite_dihedral_test(file_name):
     # Initialize the list of QHS
     qhs_list = read_name(file_name)
-
+    print(len(qhs_list))
     # Write heading of the table
     with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
         open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
@@ -36,7 +36,7 @@ def finite_dihedral_test(file_name):
     # Initialize the count of QHS for which the test rules OUT the infinite dihedral quotient
     count = 0
     for name in qhs_list:
-        print(name + "\n")
+        print(name)
         if has_all_finite_dihedral_quotients(name, UPPER_BOUND) == False:
             count += 1
             with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
