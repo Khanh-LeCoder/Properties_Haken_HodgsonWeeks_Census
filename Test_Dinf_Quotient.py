@@ -98,6 +98,56 @@ def double_cover_test(file_name):
 
 ############################
 
+def inverse_aff(affine_map):
+    """
+    Compute the inverse of an affine homeomorphism on R f(x) = m * x + b which is f^-1(x) = m^-1 * x - m^-1 * b
+    Input:  A list of numbers [m,b] representing f(x) = m * x + b
+    Output: [m^-1, -m^-1*b]
+    """
+    m = affine_map[0]
+    b = affine_map[1]
+    return [m^-1, -(m^-1) * b]
+
+def compose_aff(f,g):
+    """
+    Given two affine maps f(x) and g(x) return f(g(x))
+    """
+    mg = g[0]
+    bg = g[1]
+    mf = f[0]
+    bf = f[1]
+    return [mf * mg, mf * bg + bf]
+
+def substitute_aff(word,hom):
+    """
+    Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
+    Input:  A word in "a,b,A,B" or "a,b,c,A,B,C" and a candidate homomorphism given as a list of two strings or three strings of affine maps
+    Output: The image of word under the homomorphism
+    """
+    # Initialize the output with the identity map
+    hom_word = [1,0]
+    # Initialize the homeomorphism in hom as ha,hb, and hc
+    ha = hom[0]
+    hb = hom[1]
+    if len(hom) == 3:
+        hc = hom[2]
+
+    for letter in word[::-1]:
+        if letter == "a":
+            hom_word = compose_aff(ha,hom_word)
+        elif letter == "b":
+            hom_word = compose_aff(hb, hom_word)
+        elif letter == "c":
+            hom_word = compose_aff(hc, hom_word)
+        elif letter == "A":
+            hom_word = compose_aff(inverse_aff(ha), hom_word)
+        elif letter == "B":
+            hom_word = compose_aff(inverse_aff(hb), hom_word)
+        elif letter == "C":
+            hom_word = compose_aff(inverse_aff(hc), hom_word)
+
+    return hom_word
+
 def substitute(word,hom):
     """
     Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
@@ -105,30 +155,19 @@ def substitute(word,hom):
     Output: The image of word under the homomorphism
     """
     new_word = ""
-    if len(hom) == 2:
-        for letter in word:
-            if letter == "a":
-                new_word += hom[0]
-            elif letter == "A":
-                new_word += hom[0][::-1]
-            elif letter == "b":
-                new_word += hom[1]
-            elif letter == "B":
-                new_word += hom[1][::-1]
-    else: 
-        for letter in word:
-            if letter == "a":
-                new_word += hom[0]
-            elif letter == "A":
-                new_word += hom[0][::-1]
-            elif letter == "b":
-                new_word += hom[1]
-            elif letter == "B":
-                new_word += hom[1][::-1]
-            elif letter == "c":
-                new_word += hom[2]
-            elif letter == "C":
-                new_word += hom[2][::-1]
+    for letter in word:
+        if letter == "a":
+            new_word += hom[0]
+        elif letter == "A":
+            new_word += hom[0][::-1]
+        elif letter == "b":
+            new_word += hom[1]
+        elif letter == "B":
+            new_word += hom[1][::-1]
+        elif letter == "c":
+            new_word += hom[2]
+        elif letter == "C":
+            new_word += hom[2][::-1]
     return new_word
 
 def sub_relation(relations,hom):
@@ -154,8 +193,8 @@ def reduce_dihedral(word):
 
 def candidate_hom(num_generators):
     """
-    Input: 
-    Output:
+    Input:  The number of generators of the group which is either 2 or 3
+    Output: The list candidate homomorphisms from the group to the infinite dihedral group
     """
     if num_generators == 2:
         return [["x","y"],["x","xy"],["xy","x"]]
