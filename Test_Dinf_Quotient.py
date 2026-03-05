@@ -194,28 +194,22 @@ def word_equation(word,hom):
     for letter in word[::-1]:
         if letter == "a":
             coeff_a = coeff_a + prod
-            print([coeff_a, coeff_b, coeff_c])
             prod = prod * hom[0]
         elif letter == "A":
             coeff_a = coeff_a - hom[0] * prod
             prod = prod * hom[0]
-            print([coeff_a, coeff_b, coeff_c])
         if letter == "b":
             coeff_b = coeff_b + prod
             prod = prod * hom[1]
-            print([coeff_a, coeff_b, coeff_c])
         elif letter == "B":
             coeff_b = coeff_b  - hom[1] * prod
             prod = prod * hom[1]
-            print([coeff_a, coeff_b, coeff_c])
         if letter == "c":
             coeff_c = coeff_c + prod
             prod = prod * hom[2]
-            print([coeff_a, coeff_b, coeff_c])
         elif letter == "C":
             coeff_c = coeff_c  - hom[2] * prod
             prod = prod * hom[2]
-            print([coeff_a, coeff_b, coeff_c])
     if len(hom) == 2:
         return [coeff_a, coeff_b]
     elif len(hom) == 3:
