@@ -118,35 +118,72 @@ def compose_aff(f,g):
     bf = f[1]
     return [mf * mg, mf * bg + bf]
 
-def substitute_aff(word,hom):
-    """
-    Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
-    Input:  A word in "a,b,A,B" or "a,b,c,A,B,C" and a candidate homomorphism given as a list of two strings or three strings of affine maps
-    Output: The image of word under the homomorphism
-    """
-    # Initialize the output with the identity map
-    hom_word = [1,0]
-    # Initialize the homeomorphism in hom as ha,hb, and hc
-    ha = hom[0]
-    hb = hom[1]
-    if len(hom) == 3:
-        hc = hom[2]
+# def substitute_aff(word,hom):
+#     """
+#     Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
+#     Input:  A word in "a,b,A,B" or "a,b,c,A, B,C" and a candidate homomorphism given as a list of two strings or three strings of affine maps
+#     Output: The image of word under the homomorphism
+#     """
+#     # Initialize the output with the identity map
+#     hom_word = [1,0]
+#     # Initialize the homeomorphism in hom as ha,hb, and hc
+#     ha = hom[0]
+#     hb = hom[1]
+#     if len(hom) == 3:
+#         hc = hom[2]
+#
+#     for letter in word[::-1]:
+#         if letter == "a":
+#             hom_word = compose_aff(ha,hom_word)
+#         elif letter == "b":
+#             hom_word = compose_aff(hb, hom_word)
+#         elif letter == "c":
+#             hom_word = compose_aff(hc, hom_word)
+#         elif letter == "A":
+#             hom_word = compose_aff(inverse_aff(ha), hom_word)
+#         elif letter == "B":
+#             hom_word = compose_aff(inverse_aff(hb), hom_word)
+#         elif letter == "C":
+#             hom_word = compose_aff(inverse_aff(hc), hom_word)
+#
+#     return hom_word
 
+def word_equation(word,hom):
+    """
+    Compute the equation defined by word given a homomorphism to the multiplicative group {1,-1}
+    Input:  A word in "a,b,A,B" or "a,b,c,A,B,C" and a candidate homomorphism given as a list of two strings or three strings
+    Output: A list of coefficients of
+    """
+    prod = 1
+    coeff_a = 0
+    coeff_b = 0
+    coeff_c = 0
     for letter in word[::-1]:
         if letter == "a":
-            hom_word = compose_aff(ha,hom_word)
-        elif letter == "b":
-            hom_word = compose_aff(hb, hom_word)
-        elif letter == "c":
-            hom_word = compose_aff(hc, hom_word)
+            coeff_a = coeff_a + prod
+            prod = prod * hom[0]
         elif letter == "A":
-            hom_word = compose_aff(inverse_aff(ha), hom_word)
+            coeff_a = coeff_a - prod
+            prod = prod * hom[0]
+        if letter == "b":
+            coeff_a = coeff_b + prod
+            prod = prod * hom[1]
         elif letter == "B":
-            hom_word = compose_aff(inverse_aff(hb), hom_word)
+            coeff_a = coeff_b - prod
+            prod = prod * hom[1]
+        if letter == "c":
+            coeff_a = coeff_c + prod
+            prod = prod * hom[2]
         elif letter == "C":
-            hom_word = compose_aff(inverse_aff(hc), hom_word)
+            coeff_a = coeff_c - prod
+            prod = prod * hom[2]
+    if len(hom) == 2:
+        return [coeff_a, coeff_b]
+    else:
+        return [coeff_a, coeff_b, coeff_c]
 
-    return hom_word
+def relations_equation(relations, hom):
+    return [word_equation(word,hom) for word in relations]
 
 def substitute(word,hom):
     """
