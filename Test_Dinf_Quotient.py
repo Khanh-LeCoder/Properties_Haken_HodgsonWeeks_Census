@@ -118,35 +118,68 @@ def compose_aff(f,g):
     bf = f[1]
     return [mf * mg, mf * bg + bf]
 
-# def substitute_aff(word,hom):
-#     """
-#     Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
-#     Input:  A word in "a,b,A,B" or "a,b,c,A, B,C" and a candidate homomorphism given as a list of two strings or three strings of affine maps
-#     Output: The image of word under the homomorphism
-#     """
-#     # Initialize the output with the identity map
-#     hom_word = [1,0]
-#     # Initialize the homeomorphism in hom as ha,hb, and hc
-#     ha = hom[0]
-#     hb = hom[1]
-#     if len(hom) == 3:
-#         hc = hom[2]
-#
-#     for letter in word[::-1]:
-#         if letter == "a":
-#             hom_word = compose_aff(ha,hom_word)
-#         elif letter == "b":
-#             hom_word = compose_aff(hb, hom_word)
-#         elif letter == "c":
-#             hom_word = compose_aff(hc, hom_word)
-#         elif letter == "A":
-#             hom_word = compose_aff(inverse_aff(ha), hom_word)
-#         elif letter == "B":
-#             hom_word = compose_aff(inverse_aff(hb), hom_word)
-#         elif letter == "C":
-#             hom_word = compose_aff(inverse_aff(hc), hom_word)
-#
-#     return hom_word
+def substitute_aff(word,hom):
+     """
+     Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
+     Input:  A word in "a,b,A,B" or "a,b,c,A, B,C" and a candidate homomorphism given as a list of two strings or three strings of affine maps
+     Output: The image of word under the homomorphism
+     """
+     # Initialize the output with the identity map
+     hom_word = [1,0]
+     # Initialize the homeomorphism in hom as ha,hb, and hc
+     ha = hom[0]
+     hb = hom[1]
+     if len(hom) == 3:
+         hc = hom[2]
+
+     for letter in word[::-1]:
+         if letter == "a":
+             hom_word = compose_aff(ha,hom_word)
+         elif letter == "b":
+             hom_word = compose_aff(hb, hom_word)
+         elif letter == "c":
+             hom_word = compose_aff(hc, hom_word)
+         elif letter == "A":
+             hom_word = compose_aff(inverse_aff(ha), hom_word)
+         elif letter == "B":
+             hom_word = compose_aff(inverse_aff(hb), hom_word)
+         elif letter == "C":
+             hom_word = compose_aff(inverse_aff(hc), hom_word)
+
+     return hom_word
+
+def evaluate_Z2_hom(word,hom):
+    prod = 1
+    for letter in word:
+        if letter == "a" or letter == "A":
+            prod = prod * hom[0]
+        elif letter == "b" or letter == "B":
+            prod = prod * hom[1]
+        elif letter == "c" or letter == "C":
+            prod = prod * hom[2]
+    return prod
+
+def eval_rel_Z2_hom(relations,hom):
+    return [evaluate_Z2_hom(word,hom) for word in relations]
+
+def candidate_Z2_hom(num_generators):
+    if num_generators == 2:
+        return [[1,1],[1,-1],[-1,1],[-1,-1]]
+    elif num_generators == 3:
+        return [[1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],[-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1]]
+
+def check_relations_Z2_hom(relations,hom):
+    check = True
+    for word in relations:
+        check = check and evaluate_Z2_hom(word,hom) == 1
+    return check
+
+def find_Z2_hom(name):
+    M = snappy.Manifold(name)
+    G = M.fundamental_group()
+    relations = G.relators()
+    num_generators = len(G.generators())
+    return [hom for hom in candidate_Z2_hom(num_generators) if check_relations_Z2_hom(relations,hom)]
 
 def word_equation(word,hom):
     """
@@ -161,29 +194,42 @@ def word_equation(word,hom):
     for letter in word[::-1]:
         if letter == "a":
             coeff_a = coeff_a + prod
+            print([coeff_a, coeff_b, coeff_c])
             prod = prod * hom[0]
         elif letter == "A":
-            coeff_a = coeff_a - prod
+            coeff_a = coeff_a - hom[0] * prod
             prod = prod * hom[0]
+            print([coeff_a, coeff_b, coeff_c])
         if letter == "b":
-            coeff_a = coeff_b + prod
+            coeff_b = coeff_b + prod
             prod = prod * hom[1]
+            print([coeff_a, coeff_b, coeff_c])
         elif letter == "B":
-            coeff_a = coeff_b - prod
+            coeff_b = coeff_b  - hom[1] * prod
             prod = prod * hom[1]
+            print([coeff_a, coeff_b, coeff_c])
         if letter == "c":
-            coeff_a = coeff_c + prod
+            coeff_c = coeff_c + prod
             prod = prod * hom[2]
+            print([coeff_a, coeff_b, coeff_c])
         elif letter == "C":
-            coeff_a = coeff_c - prod
+            coeff_c = coeff_c  - hom[2] * prod
             prod = prod * hom[2]
+            print([coeff_a, coeff_b, coeff_c])
     if len(hom) == 2:
         return [coeff_a, coeff_b]
-    else:
+    elif len(hom) == 3:
         return [coeff_a, coeff_b, coeff_c]
 
 def relations_equation(relations, hom):
     return [word_equation(word,hom) for word in relations]
+
+def system_equations(name):
+    M = snappy.Manifold(name)
+    G = M.fundamental_group()
+    relations = G.relators()
+    Z2_hom = find_Z2_hom(name)
+    return [relations_equation(relations, hom) for hom in Z2_hom]
 
 def substitute(word,hom):
     """
