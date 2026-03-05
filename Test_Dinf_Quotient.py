@@ -1,7 +1,7 @@
 import snappy
 from Filter_QHS import *
 
-UPPER_BOUND = 20
+UPPER_BOUND = 12 # This parameter is optimal in the sense that there is no new example ruled out up to 100.
 HAKEN_QHS_DIHEDRAL_FILE = "HakenQHS_Dihedral_Data.txt"
 
 def has_all_finite_dihedral_quotients(name,upper_bound):
@@ -12,14 +12,16 @@ def has_all_finite_dihedral_quotients(name,upper_bound):
     """
     # Initialize the manifold and its fundamental group
     M = snappy.Manifold(name)
-    G = gap(M.fundamental_group().gap_string())
+    G = M.fundamental_group()
+    G_as_gap_string = G.gap_string()
+    Ggap = gap(G_as_gap_string)
 
     check = True
     for p in primes(1,upper_bound):
         if check == True:
             D = DihedralGroup(p) # The dihedral group of order 2p
             try:
-                epi_to_D = G.GQuotients(D)
+                epi_to_D = Ggap.GQuotients(D)
                 check = check and (len(epi_to_D) > 0)
             except RuntimeError:
                 check = True
@@ -67,7 +69,7 @@ def sum_b1_deg2cover(name):
 def is_pos_b1_deg2cover(name):
     return sum_b1_deg2cover(name) > 0
 
-def degree2_cover_test(file_name):
+def double_cover_test(file_name):
     # read the content of HAKEN_QHS_DIHEDRAL_FILE
     with open(file_name, "r") as open_file:
         original_content = open_file.readlines()
@@ -76,14 +78,14 @@ def degree2_cover_test(file_name):
 
     # Write heading of the table. The content of the file is overwritten here
     with open(file_name, "w") as open_file:
-        open_file.readlines("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
+        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
 
+    count = 0
     for name in qhs_list:
         print(name)
-        index_of_name = qhs_list.index()
-        line = original_content[index_of_name]
+        index_of_name = qhs_list.index(name)
+        line = original_content[index_of_name+2]
         index_of_col = find_nth_occurrence(line,"|",3)
-        count = 0
         if is_pos_b1_deg2cover(name) == False:
             count += 1
             with open(file_name, "a") as open_file:
@@ -91,14 +93,15 @@ def degree2_cover_test(file_name):
         else:
             with open(file_name, "a") as open_file:
                 open_file.write(line[:index_of_col+2] + "Maybe" + line[index_of_col+1:])
-        print("There are", count, "QHS ruled out by testing the double covers.\n")
 
+    print("There are", count, "QHS ruled out by testing the double covers.\n")
 
 ############################
 
 def substitute(word,hom):
     """
-    Input: A word and a candidate homomorphism 
+    Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
+    Input: A word in "a,b,A,B" or "a,b,c,A,B,C" and a candidate homomorphism given as a list of two strings or three strings
     Output: The image of word under the homomorphism
     """
     new_word = ""
@@ -137,7 +140,7 @@ def sub_relation(relations,hom):
 
 def reduce_dihedral(word):
     """
-    Input: A word
+    Input: A word in "x,y"
     Output: A reduced word in the infinite dihedral group
     """
     while word.find('xx') != -1 or word.find('yy') != -1:
@@ -157,7 +160,7 @@ def candidate_hom(num_generators):
     if num_generators == 2:
         return [["x","y"],["x","xy"],["xy","x"]]
     else:
-        return [["y","x","x"],["x","y","x"],["x","x","y"]] + [["xy","x","x"],["x","xy","x"],["x","x","xy"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","y","xy"],["y","xy","x"],["xy","x","y"],["x","xy","y"],["xy","y","x"],["y","x","xy"]] + [["x","y","yx"],["y","yx","x"],["yx","x","y"],["x","yx","y"],["yx","y","x"],["y","x","yx"]]
+        return [["x","y",""],["x","","y"],["","x","y"],["x","xy",""],["x","","xy"],["","x","xy"],["xy","x",""],["xy","","x"],["","xy","x"]] + [["x","x","y"],["x","y","x"],["y","x","x"]] + [["x","y","xy"],["x","xy","y"],["y","x","xy"],["y","xy","x"],["xy","x","y"],["xy","y","x"]] + [["x","y","yx"],["x","yx","y"],["y","x","yx"],["y","yx","x"],["yx","x","y"],["yx","y","x"]] + [["x","x","xy"],["x","xy","x"],["xy","x","x"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","xy","yx"],["x","yx","xy"],["xy","x","yx"],["xy","yx","x"],["yx","x","xy"],["yx","xy","x"]]
 
 def is_trivial(word):
     """
@@ -186,16 +189,66 @@ def is_Dinfty_quotient(name):
     """
     M = snappy.Manifold(name)
     G = M.fundamental_group()
-    num_generators = len(G.generators())
     relations = G.relators()
+
+    num_generators = len(G.generators())
     hom_list = candidate_hom(num_generators)
-
     check = False
-    for hom in hom_list:
-        hom_relations = sub_relation(relations,hom)
-        check = check or is_relations_hold(hom_relations)
+    if num_generators == 2:
+        for hom in hom_list:
+            hom_relations = sub_relation(relations,hom)
+            check = check or is_relations_hold(hom_relations)
+        return check
+    elif num_generators == 3:
+        for hom in hom_list:
+            hom_relations = sub_relation(relations,hom)
+            check = check or is_relations_hold(hom_relations)
+        if check:
+            return check
+        else:
+            return None
 
-    return check 
+
+def search_homomorphism(file_name):
+    # read the content of HAKEN_QHS_DIHEDRAL_FILE
+    with open(file_name, "r") as open_file:
+        original_content = open_file.readlines()
+
+    qhs_list = [line[find_nth_occurrence(line, " ", 1) + 1:find_nth_occurrence(line, " ", 2)] for line in
+                original_content[2:]]
+
+    # Write heading of the table. The content of the file is overwritten here
+    with open(file_name, "w") as open_file:
+        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
+
+    count = 0
+    num_three_generated = 0
+    for name in qhs_list:
+        print(name)
+        index_of_name = qhs_list.index(name)
+        line = original_content[index_of_name + 2]
+        # Find the index of the 4th column separation character "|"
+        index_of_col = find_nth_occurrence(line, "|", 4)
+        if is_pos_b1_deg2cover(name) > 0:
+            if is_Dinfty_quotient(name) == False:
+                with open(file_name, "a") as open_file:
+                    open_file.write(line[:index_of_col + 2] + "No D_inf quotient" + line[index_of_col + 1:])
+                count += 1
+            elif is_Dinfty_quotient(name) == True:
+                with open(file_name, "a") as open_file:
+                    open_file.write(line[:index_of_col + 2] + "Yes D_inf quotient" + line[index_of_col + 1:])
+            elif is_Dinfty_quotient(name) == None:
+                with open(file_name, "a") as open_file:
+                    open_file.write(line[:index_of_col + 2] + "Maybe" + line[index_of_col + 1:])
+                num_three_generated += 1
+        else:
+            with open(file_name, "a") as open_file:
+                open_file.write(line[:index_of_col + 2] + "No D_inf quotient" + line[index_of_col + 1:])
+
+    print("There are", count, " additional QHS ruled out by searching for homomorphisms.")
+    print("There are", num_three_generated, " 3-generated QHS left to test.")
+
+search_homomorphism(HAKEN_QHS_DIHEDRAL_FILE)
 
 
 
