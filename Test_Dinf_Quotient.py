@@ -268,6 +268,12 @@ def reduce_dihedral(word):
             word = word[:index] + word[index + 2:]
     return word
 
+def s3_permute(tup):
+    a = tup[0]
+    b = tup[1]
+    c = tup[2]
+    return [[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,b,a]]
+
 def candidate_hom(num_generators):
     """
     Input:  The number of generators of the group which is either 2 or 3
@@ -276,7 +282,7 @@ def candidate_hom(num_generators):
     if num_generators == 2:
         return [["x","y"],["x","xy"],["xy","x"]]
     else:
-        return [["x","y",""],["x","","y"],["","x","y"],["x","xy",""],["x","","xy"],["","x","xy"],["xy","x",""],["xy","","x"],["","xy","x"]] + [["x","x","y"],["x","y","x"],["y","x","x"]] + [["x","y","xy"],["x","xy","y"],["y","x","xy"],["y","xy","x"],["xy","x","y"],["xy","y","x"]] + [["x","y","yx"],["x","yx","y"],["y","x","yx"],["y","yx","x"],["yx","x","y"],["yx","y","x"]] + [["x","x","xy"],["x","xy","x"],["xy","x","x"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","xy","yx"],["x","yx","xy"],["xy","x","yx"],["xy","yx","x"],["yx","x","xy"],["yx","xy","x"]]
+        return [["x","y",""],["x","","y"],["","x","y"],["x","xy",""],["x","","xy"],["","x","xy"],["xy","x",""],["xy","","x"],["","xy","x"]] + [["x","x","y"],["x","y","x"],["y","x","x"]] + [["x","y","xy"],["x","xy","y"],["y","x","xy"],["y","xy","x"],["xy","x","y"],["xy","y","x"]] + [["x","y","yx"],["x","yx","y"],["y","x","yx"],["y","yx","x"],["yx","x","y"],["yx","y","x"]] + [["x","x","xy"],["x","xy","x"],["xy","x","x"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","xy","yx"],["x","yx","xy"],["xy","x","yx"],["xy","yx","x"],["yx","x","xy"],["yx","xy","x"]] + [["yxyx","y","x"],["xyxy","y","x"],["y","yxyxy","x"],["xyxy","xy","x"],["xy","yxy","x"]] + s3_permute(["x","xy","yxyx"]) + s3_permute(["x","yxyx","yx"])
 
 def is_trivial(word):
     """
@@ -339,6 +345,7 @@ def search_homomorphism(file_name):
 
     count = 0
     num_three_generated = 0
+    remaining_cases = []
     for name in qhs_list:
         print(name)
         index_of_name = qhs_list.index(name)
@@ -357,14 +364,21 @@ def search_homomorphism(file_name):
                 with open(file_name, "a") as open_file:
                     open_file.write(line[:index_of_col + 2] + "Maybe" + line[index_of_col + 1:])
                 num_three_generated += 1
+                remaining_cases.append(name)
         else:
             with open(file_name, "a") as open_file:
                 open_file.write(line[:index_of_col + 2] + "No D_inf quotient" + line[index_of_col + 1:])
 
     print("There are", count, " additional QHS ruled out by searching for homomorphisms.")
     print("There are", num_three_generated, " 3-generated QHS left to test.")
+    return remaining_cases
 
-search_homomorphism(HAKEN_QHS_DIHEDRAL_FILE)
+cases = search_homomorphism(HAKEN_QHS_DIHEDRAL_FILE)
+
+for name in cases:
+    print(name)
+    print(find_Z2_hom(name))
+    print(system_equations(name))
 
 
 
