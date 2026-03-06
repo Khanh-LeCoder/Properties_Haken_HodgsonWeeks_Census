@@ -1,58 +1,31 @@
 import snappy
 from Filter_QHS import *
 
-UPPER_BOUND = 12 # This parameter is optimal in the sense that there is no new example ruled out up to 100.
-HAKEN_QHS_DIHEDRAL_FILE = "HakenQHS_Dihedral_Data.txt"
+# The file "HakenQHS_Dihedral_Data.md" contains the result of testing for infinite dihedral quotients
+HAKEN_QHS_DIHEDRAL_FILE = "HakenQHS_Dihedral_Data.md"
 
-def has_all_finite_dihedral_quotients(name,upper_bound):
+def write_QHS_Dihedral_data(input_file, output_file):
     """
-    This function tests if the fundamental group of a manifold has all finite dihedral quotients of order 2p for all p less than upper_bound.
-    Input:  The SnapPy name of the manifold and the number of primes p for which the test will be performed
-    Output: True if the fundamental group of the manifold has all finite dihedral quotients of order 2p for all num_primes initial primes p.
+    Read the content of "Haken_QHS_List.txt" and write it to "Haken_QHS_Dihedral_Data.md
+    Input:  HAKEN_QHS_FILE
+    Output: HAKEN_QHS_DIHEDRAL_FILE
     """
-    # Initialize the manifold and its fundamental group
-    M = snappy.Manifold(name)
-    G = M.fundamental_group()
-    G_as_gap_string = G.gap_string()
-    Ggap = gap(G_as_gap_string)
+    # Read the list of manifolds from file_name
+    mfld_list = read_name(input_file)
 
-    check = True
-    for p in primes(1,upper_bound):
-        if check == True:
-            D = DihedralGroup(p) # The dihedral group of order 2p
-            try:
-                epi_to_D = Ggap.GQuotients(D)
-                check = check and (len(epi_to_D) > 0)
-            except RuntimeError:
-                check = True
-    return check
+    # Write the table heading
+    with open(output_file, "w") as open_file:
+        open_file.write("| Name | Double Cover Test | Search Epimorphism |\n|---|---|---|\n")
 
-def finite_dihedral_test(file_name):
-    # Initialize the list of QHS
-    qhs_list = read_name(file_name)
-    print(len(qhs_list))
-    # Write heading of the table
-    with open(HAKEN_QHS_DIHEDRAL_FILE, "w") as open_file:
-        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
+    with open(output_file, "a") as open_file:
+        for name in mfld_list:
+            open_file.write("| " + name + " | | |\n")
 
-    # Initialize the count of QHS for which the test rules OUT the infinite dihedral quotient
-    count = 0
-    for name in qhs_list:
-        print(name)
-        if has_all_finite_dihedral_quotients(name, UPPER_BOUND) == False:
-            count += 1
-            with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
-                open_file.write("| " + name + " | No D_inf quotient | | |\n")
-        else:
-            with open(HAKEN_QHS_DIHEDRAL_FILE, "a") as open_file:
-                open_file.write("| " + name + " | Maybe | | |\n")
-    print("There are", count, "QHS without finite dihedral quotient of order 2p for p <", UPPER_BOUND, ".\n" )
-
-###########################
+    print("There are", len(mfld_list), "Haken QHS.")
 
 def sum_b1_deg2cover(name):
     """
-    Input: The name of a 3-manifold
+    Input:  The name of a 3-manifold
     Output: The sum of the betti number of all degree two cover
     """
     # Initialize M and compute all of its degree 2 covers
@@ -67,88 +40,46 @@ def sum_b1_deg2cover(name):
     return sum_b1
 
 def is_pos_b1_deg2cover(name):
+    """
+    The function test if the manifold has positive sum of the first betti number of all double covers
+    """
     return sum_b1_deg2cover(name) > 0
 
-def double_cover_test(file_name):
+def write_double_cover_test(file_name):
     # read the content of HAKEN_QHS_DIHEDRAL_FILE
     with open(file_name, "r") as open_file:
         original_content = open_file.readlines()
 
+    # read the content of the first column which contains the names of QHS
     qhs_list = [line[find_nth_occurrence(line," ",1)+1:find_nth_occurrence(line," ",2)] for line in original_content[2:]]
 
     # Write heading of the table. The content of the file is overwritten here
     with open(file_name, "w") as open_file:
-        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
+        open_file.write("| Name | Double Cover Test | Search Epimorphism |\n|---|---|---|\n")
 
     count = 0
     for name in qhs_list:
-        print(name)
         index_of_name = qhs_list.index(name)
         line = original_content[index_of_name+2]
-        index_of_col = find_nth_occurrence(line,"|",3)
+        index_of_col = find_nth_occurrence(line,"|",2)
         if is_pos_b1_deg2cover(name) == False:
             count += 1
             with open(file_name, "a") as open_file:
-                open_file.write(line[:index_of_col+2] + "No D_inf quotient" + line[index_of_col+1:])
+                open_file.write(line[:index_of_col+2] + "No" + line[index_of_col+1:])
         else:
             with open(file_name, "a") as open_file:
                 open_file.write(line[:index_of_col+2] + "Maybe" + line[index_of_col+1:])
 
     print("There are", count, "QHS ruled out by testing the double covers.\n")
 
-############################
-
-def inverse_aff(affine_map):
-    """
-    Compute the inverse of an affine homeomorphism on R f(x) = m * x + b which is f^-1(x) = m^-1 * x - m^-1 * b
-    Input:  A list of numbers [m,b] representing f(x) = m * x + b
-    Output: [m^-1, -m^-1*b]
-    """
-    m = affine_map[0]
-    b = affine_map[1]
-    return [m^-1, -(m^-1) * b]
-
-def compose_aff(f,g):
-    """
-    Given two affine maps f(x) and g(x) return f(g(x))
-    """
-    mg = g[0]
-    bg = g[1]
-    mf = f[0]
-    bf = f[1]
-    return [mf * mg, mf * bg + bf]
-
-def substitute_aff(word,hom):
-     """
-     Compute the image of a word in "a,b" or "a,b,c" under a candidate homomorphism
-     Input:  A word in "a,b,A,B" or "a,b,c,A, B,C" and a candidate homomorphism given as a list of two strings or three strings of affine maps
-     Output: The image of word under the homomorphism
-     """
-     # Initialize the output with the identity map
-     hom_word = [1,0]
-     # Initialize the homeomorphism in hom as ha,hb, and hc
-     ha = hom[0]
-     hb = hom[1]
-     if len(hom) == 3:
-         hc = hom[2]
-
-     for letter in word[::-1]:
-         if letter == "a":
-             hom_word = compose_aff(ha,hom_word)
-         elif letter == "b":
-             hom_word = compose_aff(hb, hom_word)
-         elif letter == "c":
-             hom_word = compose_aff(hc, hom_word)
-         elif letter == "A":
-             hom_word = compose_aff(inverse_aff(ha), hom_word)
-         elif letter == "B":
-             hom_word = compose_aff(inverse_aff(hb), hom_word)
-         elif letter == "C":
-             hom_word = compose_aff(inverse_aff(hc), hom_word)
-
-     return hom_word
+# Now we use these functions to obtain a system equations over Z coming from letting a,b,c be f(x) = ma * x + va, g(x) = mb * x + vb, h(x) = mc * x + vc
 
 def evaluate_Z2_hom(word,hom):
+    """
+    Given a word in a,b,A,B or in a,b,c,A,B,C and a candidate homomorphism from a group G to {1,-1} compute the image of word under the homomorphism
+    Input:  a string in a,b,A,B or in a,b,c,A,B,C for word and a list of 2 or 3 elements each is either 1 or -1 representing the image of a,b or c under the candidate homorphism
+    Output: Either 1 or -1
+    """
     prod = 1
     for letter in word:
         if letter == "a" or letter == "A":
@@ -282,7 +213,7 @@ def candidate_hom(num_generators):
     if num_generators == 2:
         return [["x","y"],["x","xy"],["xy","x"]]
     else:
-        return [["x","y",""],["x","","y"],["","x","y"],["x","xy",""],["x","","xy"],["","x","xy"],["xy","x",""],["xy","","x"],["","xy","x"]] + [["x","x","y"],["x","y","x"],["y","x","x"]] + [["x","y","xy"],["x","xy","y"],["y","x","xy"],["y","xy","x"],["xy","x","y"],["xy","y","x"]] + [["x","y","yx"],["x","yx","y"],["y","x","yx"],["y","yx","x"],["yx","x","y"],["yx","y","x"]] + [["x","x","xy"],["x","xy","x"],["xy","x","x"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","xy","yx"],["x","yx","xy"],["xy","x","yx"],["xy","yx","x"],["yx","x","xy"],["yx","xy","x"]] + [["yxyx","y","x"],["xyxy","y","x"],["y","yxyxy","x"],["xyxy","xy","x"],["xy","yxy","x"]] + s3_permute(["x","xy","yxyx"]) + s3_permute(["x","yxyx","yx"])
+        return [["x","y",""],["x","","y"],["","x","y"],["x","xy",""],["x","","xy"],["","x","xy"],["xy","x",""],["xy","","x"],["","xy","x"]] + [["x","x","y"],["x","y","x"],["y","x","x"]] + [["x","y","xy"],["x","xy","y"],["y","x","xy"],["y","xy","x"],["xy","x","y"],["xy","y","x"]] + [["x","y","yx"],["x","yx","y"],["y","x","yx"],["y","yx","x"],["yx","x","y"],["yx","y","x"]] + [["x","x","xy"],["x","xy","x"],["xy","x","x"]] + [["x","xy","xy"],["xy","x","xy"],["xy","xy","x"]] + [["x","xy","yx"],["x","yx","xy"],["xy","x","yx"],["xy","yx","x"],["yx","x","xy"],["yx","xy","x"]] + [["y","yxyxy","x"]] + s3_permute(["x","xy","yxyx"]) + s3_permute(["x","yxyx","yx"]) + s3_permute(["xy","yxy","x"]) + s3_permute(["x","xy","xyxy"]) + s3_permute(["x","y","xyxy"]) + s3_permute(["x","y","yxyx"]) + s3_permute(["x","y","yxy"]) + s3_permute(["x","y","yxyxy"])
 
 def is_trivial(word):
     """
@@ -341,25 +272,24 @@ def search_homomorphism(file_name):
 
     # Write heading of the table. The content of the file is overwritten here
     with open(file_name, "w") as open_file:
-        open_file.write("| Name | Finite Dihedral Test | Double Cover Test | Search Epimorphism |\n|---|---|---|---|\n")
+        open_file.write("| Name | Double Cover Test | Search Epimorphism |\n|---|---|---|\n")
 
     count = 0
     num_three_generated = 0
     remaining_cases = []
     for name in qhs_list:
-        print(name)
         index_of_name = qhs_list.index(name)
         line = original_content[index_of_name + 2]
         # Find the index of the 4th column separation character "|"
-        index_of_col = find_nth_occurrence(line, "|", 4)
+        index_of_col = find_nth_occurrence(line, "|", 3)
         if is_pos_b1_deg2cover(name) > 0:
             if is_Dinfty_quotient(name) == False:
                 with open(file_name, "a") as open_file:
-                    open_file.write(line[:index_of_col + 2] + "No D_inf quotient" + line[index_of_col + 1:])
+                    open_file.write(line[:index_of_col + 2] + "No" + line[index_of_col + 1:])
                 count += 1
             elif is_Dinfty_quotient(name) == True:
                 with open(file_name, "a") as open_file:
-                    open_file.write(line[:index_of_col + 2] + "Yes D_inf quotient" + line[index_of_col + 1:])
+                    open_file.write(line[:index_of_col + 2] + "Yes" + line[index_of_col + 1:])
             elif is_Dinfty_quotient(name) == None:
                 with open(file_name, "a") as open_file:
                     open_file.write(line[:index_of_col + 2] + "Maybe" + line[index_of_col + 1:])
@@ -373,12 +303,5 @@ def search_homomorphism(file_name):
     print("There are", num_three_generated, " 3-generated QHS left to test.")
     return remaining_cases
 
-cases = search_homomorphism(HAKEN_QHS_DIHEDRAL_FILE)
-
-for name in cases:
-    print(name)
-    print(find_Z2_hom(name))
-    print(system_equations(name))
-
-
+search_homomorphism(HAKEN_QHS_DIHEDRAL_FILE)
 
