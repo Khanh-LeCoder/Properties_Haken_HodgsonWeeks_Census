@@ -50,15 +50,18 @@ def write_eqn_data(input_file):
         eqn_file.write("| Name | Equation |\n|---|---|\n")
 
     for name in mfld_list:
-        try
+        try:
             char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=5)
             with open(EQUATION_DATA, "a")  as eqn_file:
                 eqn_file.write("| " + name + " | " + char_var_ideal + " |\n")
         except TimeoutError as e:
             with open(EQUATION_DATA, "a")  as eqn_file:
                 eqn_file.write("| " + name + " | Equation computation timed out |\n")
+        except Exception as e:
+            with open(EQUATION_DATA, "a")  as eqn_file:
+                eqn_file.write("| " + name + " | Equation computation timed out |\n")
 
-
+write_eqn_data(HAKEN_QHS_FILE)
 
 
 def SL2_char_var_ideals(name):
