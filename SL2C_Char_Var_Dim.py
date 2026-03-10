@@ -3,8 +3,8 @@ from Filter_QHS import *
 from multiprocessing import Process, Queue
 import time
 
-EQUATION_DATA = "Equation_data.md"
-CHAR_VAR_DATA = "Char_Var_data.md"
+EQUATION_DATA = "Equation_Data.md"
+CHAR_VAR_DATA = "Char_Var_Data.md"
 
 # Define some helper functions to compute ideal of character variety and dimension with time out.
 def worker(func, args, queue):
@@ -35,35 +35,6 @@ def run_with_timeout(func, *args, timeout):
         raise value
     return value
 
-def write_eqn_data(input_file):
-    """
-    From the list of QHS, try to compute the ideal defining the character variety of the manifold with a timeout of 5 second
-    Input:  The input file contains the names of a manifold on each line
-    output: None. Write the defining ideal to EQUATION_DATA or "Equation computation timed out"
-    """
-    # Read the names of manifolds in the input file
-    mfld_list = read_name(input_file)
-
-    # Write the headings in the equation files:
-    with open(EQUATION_DATA, "w") as eqn_file:
-        eqn_file.write("| Name | Equation |\n|---|---|\n")
-
-    for name in mfld_list:
-        print(name)
-        try:
-            char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=5)
-            with open(EQUATION_DATA, "a")  as eqn_file:
-                eqn_file.write("| " + name + " | " + char_var_ideal + " |\n")
-        except TimeoutError as e:
-            with open(EQUATION_DATA, "a")  as eqn_file:
-                eqn_file.write("| " + name + " | Equation computation timed out |\n")
-        except Exception as e:
-            with open(EQUATION_DATA, "a")  as eqn_file:
-                eqn_file.write("| " + name + " | Equation computation timed out |\n")
-
-write_eqn_data(HAKEN_QHS_FILE)
-
-
 def SL2_char_var_ideals(name):
     """
     Input:  The name of a manifold from the Hodson Weeks census
@@ -74,26 +45,78 @@ def SL2_char_var_ideals(name):
     I = G.character_variety_vars_and_polys("as_ideals")
     return I
 
+def write_eqn_data(input_file):
+    """
+    From the list of QHS, try to compute the ideal defining the character variety of the manifold with a timeout of 5 second
+    Input:  The input file contains the names of a manifold on each line
+    output: None. Write the defining ideal to EQUATION_DATA or "Equation computation timed out"
+    """
+    # Read the names of manifolds in the input file
+    qhs_list = read_name(input_file)
+
+    # Write the headings in the equation files:
+    with open(EQUATION_DATA, "w") as eqn_file:
+        eqn_file.write("| Name | Equation |\n|---|---|\n")
+
+    count = 0
+    for name in qhs_list:
+        print(name)
+        try:
+            char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=30)
+            count += 1
+            with open(EQUATION_DATA, "a")  as eqn_file:
+                eqn_file.write("| " + name + " | " + char_var_ideal + " |\n")
+        except TimeoutError as e:
+            with open(EQUATION_DATA, "a")  as eqn_file:
+                eqn_file.write("| " + name + " | Equation computation timed out |\n")
+        except Exception as e:
+            with open(EQUATION_DATA, "a")  as eqn_file:
+                eqn_file.write("| " + name + " | Equation computation timed out |\n")
+    print("Computed the character variety of", count, "manifold.")
+
+write_eqn_data(HAKEN_QHS_FILE)
 
 def SL2_char_var_dim(ideal_char):
     return ideal_char.dimension()
 
+def write_dimension_data(file_name):
+    # Read the content of EQUATION_DATA
+    with open(file_name, "r") as open_file:
+        original_content = open_file.readlines()
 
-for data in EQN_List:
-    name = data[0]
-    ideal = data[1]
-    print(name)
-    if ideal == "Time out!":
-        with open("SL2_Char_Var_Dim", "a") as open_file:
-            open_file.write("name" + " " + "Equation timed out!\n")
-    else:
-        try:
-            result = run_with_timeout(SL2_char_var_dim, ideal, timeout=5)
-            with open("SL2_Char_Var_Dim", "a") as open_file:
-                open_file.write("name" + " " + str(result))
-        except TimeoutError as e:
-            with open("SL2_Char_Var_Dim", "a") as open_file:
-                open_file.write("name" + " " + "Dimension timed out!\n")
+    # Read the names of the QHS and the equation in EQUATION_DATA create a hash table of {QHS:Equation} and a list of QHS
+    eqn_table = {}
+    qhs_list = []
+    for line in original_content[2:]:
+        name = line[find_nth_occurrence(line, "|", 1) + 2:find_nth_occurrence(line, "|", 2)-1]
+        eqn  = line[find_nth_occurrence(line, "|", 2) + 2:find_nth_occurrence(line, "|", 3)-1]
+        eqn_table[name] = eqn
+        qhs_list.append(name)
+
+    with open(CHAR_VAR_DATA, "w") as open_file:
+        open_file.write("| Name | Equation | Dimension |\n|---|---|---|\n")
+
+    count = 0
+    for name in qhs_list:
+        print(name)
+        ideal = eqn_table[name]
+        if ideal == "Equation computation timed out":
+            with open(CHAR_VAR_DATA, "a") as open_file:
+                open_file.write("| " + name + " | Equation computation timed out | None |\n")
+        else:
+            try:
+                dimension = run_with_timeout(SL2_char_var_dim,ideal, timeout=5)
+                count += 1
+                with open(CHAR_VAR_DATA, "a") as open_file:
+                    open_file.write("| " + name + " | " + Yes + " | " + dimension + " |\n")
+            except TimeoutError as e:
+                with open("SL2_Char_Var_Dim", "a") as open_file:
+                    open_file.write("name" + " " + "Dimension timed out!\n")
+
+    print("Computed the dimension of", count, "character variety.")
+
+write_dimension_data(EQUATION_DATA)
+
 
 
 
