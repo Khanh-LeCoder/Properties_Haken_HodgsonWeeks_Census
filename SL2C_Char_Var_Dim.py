@@ -3,8 +3,10 @@ from Filter_QHS import *
 from multiprocessing import Process, Queue
 import time
 
-# Define some helper functions to compute ideal of character variety and dimension with time out.
+EQUATION_DATA = "Equation_data.md"
+CHAR_VAR_DATA = "Char_Var_data.md"
 
+# Define some helper functions to compute ideal of character variety and dimension with time out.
 def worker(func, args, queue):
     try:
         result = func(*args)
@@ -33,9 +35,6 @@ def run_with_timeout(func, *args, timeout):
         raise value
     return value
 
-EQUATION_DATA = "Equation_data.txt"
-CHAR_VAR_DATA = "Char_Var_data.md"
-
 def write_eqn_data(input_file):
     """
     From the list of QHS, try to compute the ideal defining the character variety of the manifold with a timeout of 5 second
@@ -50,6 +49,7 @@ def write_eqn_data(input_file):
         eqn_file.write("| Name | Equation |\n|---|---|\n")
 
     for name in mfld_list:
+        print(name)
         try:
             char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=5)
             with open(EQUATION_DATA, "a")  as eqn_file:
