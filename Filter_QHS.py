@@ -77,3 +77,5 @@ def find_nth_occurrence(str, char, n):
         start = str.find(char, start + len(char))
         n -= 1
     return start
+
+write_QHS(INITIAL_HAKEN_FILE)

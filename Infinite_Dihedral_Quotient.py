@@ -303,5 +303,6 @@ def search_homomorphism(file_name):
     print("There are", num_three_generated, " 3-generated QHS left to test.")
     return remaining_cases
 
+write_QHS_Dihedral_data(HAKEN_QHS_FILE,HAKEN_QHS_DIHEDRAL_FILE)
+write_double_cover_test(HAKEN_QHS_DIHEDRAL_FILE)
 search_homomorphism(HAKEN_QHS_DIHEDRAL_FILE)
-

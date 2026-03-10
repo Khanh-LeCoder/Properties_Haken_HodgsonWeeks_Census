@@ -1,8 +1,11 @@
-import snappy 
+import snappy
+from Filter_QHS import *
 from multiprocessing import Process, Queue
 import time
 
-def _worker(func, args, queue):
+# Define some helper functions to compute ideal of character variety and dimension with time out.
+
+def worker(func, args, queue):
     try:
         result = func(*args)
         queue.put(("result", result))
@@ -13,7 +16,7 @@ def _worker(func, args, queue):
 def run_with_timeout(func, *args, timeout):
     queue = Queue()
     process = Process(
-        target=_worker,
+        target=worker,
         args=(func, args, queue)
     )
 
@@ -30,6 +33,20 @@ def run_with_timeout(func, *args, timeout):
         raise value
     return value
 
+EQUATION_DATA = "Equation_data.txt"
+CHAR_VAR_DATA = "Char_Var_data.md"
+
+def write_eqn_data(input_file):
+    """
+    From the list of QHS, try to compute the ideal defining the character variety of the manifold with a timeout of 5 second
+    :param input_file:
+    :return:
+    """
+    mfld_list = read_name(input_file)
+
+
+
+
 def SL2_char_var_ideals(name):
     """
     Input:  The name of a manifold from the Hodson Weeks census
@@ -40,25 +57,27 @@ def SL2_char_var_ideals(name):
     I = G.character_variety_vars_and_polys("as_ideals")
     return I
 
-def SL2_char_var_dim(ideal):
-    return I
+
+def SL2_char_var_dim(ideal_char):
+    return ideal_char.dimension()
+
 
 for data in EQN_List:
     name = data[0]
     ideal = data[1]
     print(name)
     if ideal == "Time out!":
-        with open("SL2_Char_Var_Dim","a") as open_file:
-            open_file.write("name" + " " + "Equation timed out!\n")    
+        with open("SL2_Char_Var_Dim", "a") as open_file:
+            open_file.write("name" + " " + "Equation timed out!\n")
     else:
         try:
-            result = run_with_timeout(SL2_char_var_dim,ideal, timeout=5)
-            with open("SL2_Char_Var_Dim","a") as open_file:
+            result = run_with_timeout(SL2_char_var_dim, ideal, timeout=5)
+            with open("SL2_Char_Var_Dim", "a") as open_file:
                 open_file.write("name" + " " + str(result))
         except TimeoutError as e:
-            with open("SL2_Char_Var_Dim","a") as open_file:
+            with open("SL2_Char_Var_Dim", "a") as open_file:
                 open_file.write("name" + " " + "Dimension timed out!\n")
-   
-    
+
+
 
 
