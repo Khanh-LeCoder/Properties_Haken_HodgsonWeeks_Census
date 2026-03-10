@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e97f6f11-56f9-437e-9865-f007dcb110db" name="Changes" comment="Update Haken_List">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Filter_QHS.py" beforeDir="false" afterPath="$PROJECT_DIR$/Filter_QHS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" beforeDir="false" afterPath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SL2_Char_Var_Dim" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scratch.sage" beforeDir="false" afterPath="$PROJECT_DIR$/scratch.sage" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Properties_Haken_HodgsonWeeks_Census.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Properties_Haken_HodgsonWeeks_Census.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" beforeDir="false" afterPath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +107,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1773106828605</updated>
-      <workItem from="1773108181233" duration="3925000" />
+      <workItem from="1773108181233" duration="4895000" />
     </task>
     <task id="LOCAL-00001" summary="Update Haken_List">
       <option name="closed" value="true" />
@@ -139,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773107507002</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Update Haken_List">
+      <option name="closed" value="true" />
+      <created>1773112193527</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1773112193527</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

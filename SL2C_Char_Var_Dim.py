@@ -39,10 +39,24 @@ CHAR_VAR_DATA = "Char_Var_data.md"
 def write_eqn_data(input_file):
     """
     From the list of QHS, try to compute the ideal defining the character variety of the manifold with a timeout of 5 second
-    :param input_file:
-    :return:
+    Input:  The input file contains the names of a manifold on each line
+    output: None. Write the defining ideal to EQUATION_DATA or "Equation computation timed out"
     """
+    # Read the names of manifolds in the input file
     mfld_list = read_name(input_file)
+
+    # Write the headings in the equation files:
+    with open(EQUATION_DATA, "w") as eqn_file:
+        eqn_file.write("| Name | Equation |\n|---|---|\n")
+
+    for name in mfld_list:
+        try
+            char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=5)
+            with open(EQUATION_DATA, "a")  as eqn_file:
+                eqn_file.write("| " + name + " | " + char_var_ideal + " |\n")
+        except TimeoutError as e:
+            with open(EQUATION_DATA, "a")  as eqn_file:
+                eqn_file.write("| " + name + " | Equation computation timed out |\n")
 
 
 
