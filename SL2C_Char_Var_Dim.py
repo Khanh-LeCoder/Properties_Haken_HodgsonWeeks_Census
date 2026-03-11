@@ -66,6 +66,7 @@ def write_eqn_data(input_file):
             count += 1
             with open(EQUATION_DATA, "a")  as eqn_file:
                 eqn_file.write("| " + name + " | " + char_var_ideal + " |\n")
+                print(char_var_ideal)
         except TimeoutError as e:
             with open(EQUATION_DATA, "a")  as eqn_file:
                 eqn_file.write("| " + name + " | Equation computation timed out |\n")
