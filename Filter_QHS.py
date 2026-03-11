@@ -7,7 +7,7 @@ INITIAL_HAKEN_FILE = "Haken_List.txt"
 # The file "Haken_QHS_List.txt" contains all Haken QHS in "Haken_List.txt"
 HAKEN_QHS_FILE = "Haken_QHS_List.txt"
 
-FINAL_FILE_NAME = "Haken_QHS3_Data.md"
+FINAL_FILE_NAME = "HakenQHS_Dihedral_Data.md"
 
 def read_name(file_name):
     """
