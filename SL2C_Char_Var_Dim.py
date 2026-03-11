@@ -61,18 +61,21 @@ def write_eqn_data(input_file):
     count = 0
     for name in qhs_list:
         print(name)
+        char_var_ideal = "Equation computation timed out"
         try:
-            char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=30)
+            char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=5)
             count += 1
-            with open(EQUATION_DATA, "a")  as eqn_file:
-                eqn_file.write("| " + name + " | " + char_var_ideal + " |\n")
-                print(char_var_ideal)
         except TimeoutError as e:
             with open(EQUATION_DATA, "a")  as eqn_file:
-                eqn_file.write("| " + name + " | Equation computation timed out |\n")
+                eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
         except Exception as e:
             with open(EQUATION_DATA, "a")  as eqn_file:
-                eqn_file.write("| " + name + " | Equation computation timed out |\n")
+                eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
+
+        with open(EQUATION_DATA, "a") as eqn_file:
+            eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
+
+
     print("Computed the character variety of", count, "manifold.")
 
 write_eqn_data(HAKEN_QHS_FILE)
