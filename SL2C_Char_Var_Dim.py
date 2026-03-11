@@ -1,4 +1,6 @@
 import snappy
+from numpy.polynomial.polynomial import Polynomial
+
 from Filter_QHS import *
 from multiprocessing import Process, Queue
 import time
@@ -65,23 +67,32 @@ def write_eqn_data(input_file):
         try:
             char_var_ideal = run_with_timeout(SL2_char_var_ideals,name, timeout=5)
             count += 1
+            with open(EQUATION_DATA, "a") as eqn_file:
+                eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
         except TimeoutError as e:
-            with open(EQUATION_DATA, "a")  as eqn_file:
+            with open(EQUATION_DATA, "a") as eqn_file:
                 eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
+            print("Equation computation timed out")
         except Exception as e:
-            with open(EQUATION_DATA, "a")  as eqn_file:
+            with open(EQUATION_DATA, "a") as eqn_file:
                 eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
-
-        with open(EQUATION_DATA, "a") as eqn_file:
-            eqn_file.write("| " + name + " | " + str(char_var_ideal) + " |\n")
-
+            print("Equation computation timed out")
 
     print("Computed the character variety of", count, "manifold.")
 
 write_eqn_data(HAKEN_QHS_FILE)
 
 def SL2_char_var_dim(ideal_char):
-    return ideal_char.dimension()
+    end_parenthesis_index = ideal_char.find(")")
+    ideal = ideal_char[:end_parenthesis_index+1]
+    ideal_input = ideal.replace("^","**")
+    if ideal_char.find("Tc") == -1:
+        R.<Ta,Tb,Tab> = PolynomialRing(QQ,3)
+        ideal = eval(ideal_input)
+    elif ideal_char.find("Tc") != -1:
+        R.<Ta,Tb,Tc,Tab,Tac,Tbc,Tabc> = PolynomialRing(QQ, 7)
+        ideal = eval(ideal_input)
+    return ideal.dimension()
 
 def write_dimension_data(file_name):
     # Read the content of EQUATION_DATA
@@ -115,12 +126,12 @@ def write_dimension_data(file_name):
             try:
                 dimension = run_with_timeout(SL2_char_var_dim,ideal, timeout=5)
                 count += 1
+                with open(CHAR_VAR_DATA, "a") as open_file:
+                    open_file.write("| " + name + " | Yes | " + str(dimension) + " |\n")
             except TimeoutError as e:
                 with open(CHAR_VAR_DATA, "a") as open_file:
-                    open_file.write("| " + name + " | " + Yes + " | " + dimension + " |\n")
-
-            with open(CHAR_VAR_DATA, "a") as open_file:
-                open_file.write("| " + name + " | " + Yes + " | " + dimension + " |\n")
+                    open_file.write("| " + name + " |  Yes  | " + str(dimension) + " |\n")
+                print("Dimension timed out")
 
             if dimension == 1:
                 count_one_dim += 1
@@ -132,7 +143,8 @@ def write_dimension_data(file_name):
     print("Computed the dimension of", count, "character variety.")
     print("There are", count_one_dim, "examples with one-dimensional character variety.")
     print("There are", count_zero_dim, "examples with zero-dimensional character variety.")
-    print("There are", count_timeout, "examples.")
+    print("There are", count_timeout, "examples timed out.")
+
 write_dimension_data(EQUATION_DATA)
 
 
