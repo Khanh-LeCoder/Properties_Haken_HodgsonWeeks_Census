@@ -101,6 +101,9 @@ def write_dimension_data(file_name):
         open_file.write("| Name | Equation | Dimension |\n|---|---|---|\n")
 
     count = 0
+    count_one_dim = 0
+    count_zero_dim = 0
+    count_timeout = 0
     for name in qhs_list:
         print(name)
         ideal = eqn_table[name]
@@ -108,17 +111,28 @@ def write_dimension_data(file_name):
             with open(CHAR_VAR_DATA, "a") as open_file:
                 open_file.write("| " + name + " | Equation computation timed out | None |\n")
         else:
+            dimension = "Dimension timed out"
             try:
                 dimension = run_with_timeout(SL2_char_var_dim,ideal, timeout=5)
                 count += 1
+            except TimeoutError as e:
                 with open(CHAR_VAR_DATA, "a") as open_file:
                     open_file.write("| " + name + " | " + Yes + " | " + dimension + " |\n")
-            except TimeoutError as e:
-                with open("SL2_Char_Var_Dim", "a") as open_file:
-                    open_file.write("name" + " " + "Dimension timed out!\n")
+
+            with open(CHAR_VAR_DATA, "a") as open_file:
+                open_file.write("| " + name + " | " + Yes + " | " + dimension + " |\n")
+
+            if dimension == 1:
+                count_one_dim += 1
+            elif dimension == 0:
+                count_zero_dim += 1
+            elif dimension == "Dimension timed out":
+                count_timeout += 1
 
     print("Computed the dimension of", count, "character variety.")
-
+    print("There are", count_one_dim, "examples with one-dimensional character variety.")
+    print("There are", count_zero_dim, "examples with zero-dimensional character variety.")
+    print("There are", count_timeout, "examples.")
 write_dimension_data(EQUATION_DATA)
 
 
