@@ -1,42 +1,11 @@
-from multiprocessing import Process, Queue
-from Text_Processing import *
+from Auxiliary_Functions import *
 
 import snappy
-
 
 from Filter_QHS import *
 
 EQUATION_DATA = "Equation_Data.md"
 CHAR_VAR_DATA = "Char_Var_Data.md"
-
-# Define some helper functions to compute ideal of character variety and dimension with time out.
-def worker(func, args, queue):
-    try:
-        result = func(*args)
-        queue.put(("result", result))
-    except Exception as e:
-        queue.put(("error", e))
-
-
-def run_with_timeout(func, *args, timeout):
-    queue = Queue()
-    process = Process(
-        target=worker,
-        args=(func, args, queue)
-    )
-
-    process.start()
-    process.join(timeout)
-
-    if process.is_alive():
-        process.terminate()
-        process.join()
-        raise TimeoutError(f"Function exceeded {timeout} seconds")
-
-    status, value = queue.get()
-    if status == "error":
-        raise value
-    return value
 
 def SL2_char_var_ideals(name):
     """
@@ -122,17 +91,17 @@ def write_dimension_data(file_name):
         if ideal == "Equation computation timed out":
             with open(CHAR_VAR_DATA, "a") as open_file:
                 open_file.write("| " + name + " | Equation computation timed out | None |\n")
+            print(ideal)
         else:
             dimension = "Dimension timed out"
             try:
                 dimension = run_with_timeout(SL2_char_var_dim,ideal, timeout=5)
                 count += 1
-                with open(CHAR_VAR_DATA, "a") as open_file:
-                    open_file.write("| " + name + " | Yes | " + str(dimension) + " |\n")
             except TimeoutError as e:
-                with open(CHAR_VAR_DATA, "a") as open_file:
-                    open_file.write("| " + name + " |  Yes  | " + str(dimension) + " |\n")
                 print("Dimension timed out")
+
+            with open(CHAR_VAR_DATA, "a") as open_file:
+                open_file.write("| " + name + " | Yes | " + str(dimension) + " |\n")
 
             if dimension == 1:
                 count_one_dim += 1

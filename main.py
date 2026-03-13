@@ -1,4 +1,4 @@
-from Text_Processing import find_nth_occurrence
+from Auxiliary_Functions import find_nth_occurrence
 
 with open("HakenQHS_Dihedral_Data.md", "r") as dihedral_file:
     dihedral_data = dihedral_file.readlines()[2:]

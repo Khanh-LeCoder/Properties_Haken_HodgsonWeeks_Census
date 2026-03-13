@@ -1,5 +1,5 @@
 import snappy
-from Text_Processing import *
+from Auxiliary_Functions import *
 
 # The names of the input and output files for these computations.
 # The file "Haken_List.txt" contains all Haken 3-manifolds found in the Hodgson Weeks census.

@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e97f6f11-56f9-437e-9865-f007dcb110db" name="Changes" comment="Update Haken_List" />
+    <list default="true" id="e97f6f11-56f9-437e-9865-f007dcb110db" name="Changes" comment="Update Haken_List">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Char_Var_Data.md" beforeDir="false" afterPath="$PROJECT_DIR$/Char_Var_Data.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Filter_QHS.py" beforeDir="false" afterPath="$PROJECT_DIR$/Filter_QHS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Finite_Dihedral_Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Finite_Dihedral_Test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" beforeDir="false" afterPath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" beforeDir="false" afterPath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Text_Processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auxiliary_Functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -244,7 +253,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773363477298</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Update Haken_List">
+      <option name="closed" value="true" />
+      <created>1773388910457</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1773388910457</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -254,6 +271,17 @@
     <MESSAGE value="Update Filter_QHS.sage" />
     <MESSAGE value="Update Haken_List" />
     <option name="LAST_COMMIT_MESSAGE" value="Update Haken_List" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Auxiliary_Functions.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Properties_Haken_HodgsonWeeks_Census$Infinite_Dihedral_Quotient.coverage" NAME="Infinite_Dihedral_Quotient Coverage Results" MODIFIED="1773108282575" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
