@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e97f6f11-56f9-437e-9865-f007dcb110db" name="Changes" comment="Update Haken_List">
+      <change afterPath="$PROJECT_DIR$/Text_Processing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Filter_QHS.py" beforeDir="false" afterPath="$PROJECT_DIR$/Filter_QHS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Finite_Dihedral_Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Finite_Dihedral_Test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HakenQHS_Dihedral_Data.md" beforeDir="false" afterPath="$PROJECT_DIR$/HakenQHS_Dihedral_Data.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" beforeDir="false" afterPath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" beforeDir="false" afterPath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

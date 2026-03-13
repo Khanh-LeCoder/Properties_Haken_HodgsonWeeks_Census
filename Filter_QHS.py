@@ -1,4 +1,5 @@
 import snappy
+from Text_Processing import *
 
 # The names of the input and output files for these computations.
 # The file "Haken_List.txt" contains all Haken 3-manifolds found in the Hodgson Weeks census.
@@ -65,17 +66,5 @@ def write_QHS(file_name):
                 count += 1
                 open_file.write(name + "\n")
     print("There are", count, "Haken QHS.")
-
-def find_nth_occurrence(str, char, n):
-    """
-    Find the nth occurrence of char in str
-    Input:  A string str, a char and, a positive integer n
-    Output: The index in the str of the nth occurrence of char
-    """
-    start = str.find(char)
-    while start >= 0 and n > 1:
-        start = str.find(char, start + len(char))
-        n -= 1
-    return start
 
 write_QHS(INITIAL_HAKEN_FILE)

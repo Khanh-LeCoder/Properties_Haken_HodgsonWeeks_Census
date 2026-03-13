@@ -2295,4 +2295,3 @@
 | v3532(1,3) | No | No D_inf quotient |
 | v3532(-4,3) | No | No D_inf quotient |
 | v3531(-2,3) | No | No D_inf quotient |
-

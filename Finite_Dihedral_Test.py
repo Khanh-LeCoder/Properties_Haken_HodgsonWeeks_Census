@@ -1,4 +1,5 @@
 import snappy
+from Text_Processing import *
 from Filter_QHS import *
 
 UPPER_BOUND = 12 # This parameter is optimal in the sense that there is no new example ruled out up to 100.

@@ -1,9 +1,10 @@
+from multiprocessing import Process, Queue
+from Text_Processing import *
+
 import snappy
-from numpy.polynomial.polynomial import Polynomial
+
 
 from Filter_QHS import *
-from multiprocessing import Process, Queue
-import time
 
 EQUATION_DATA = "Equation_Data.md"
 CHAR_VAR_DATA = "Char_Var_Data.md"
@@ -39,7 +40,7 @@ def run_with_timeout(func, *args, timeout):
 
 def SL2_char_var_ideals(name):
     """
-    Input:  The name of a manifold from the Hodson Weeks census
+    Input:  The name of a manifold from the Hodgson Weeks census
     Output: The dimension of the SL2C character variety of the manifold
     """
     M = snappy.Manifold(name)

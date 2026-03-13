@@ -1,4 +1,5 @@
 import snappy
+from Text_Processing import *
 from Filter_QHS import *
 
 # The file "HakenQHS_Dihedral_Data.md" contains the result of testing for infinite dihedral quotients
