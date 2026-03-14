@@ -7,11 +7,8 @@
     <list default="true" id="e97f6f11-56f9-437e-9865-f007dcb110db" name="Changes" comment="Update Haken_List">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Char_Var_Data.md" beforeDir="false" afterPath="$PROJECT_DIR$/Char_Var_Data.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Filter_QHS.py" beforeDir="false" afterPath="$PROJECT_DIR$/Filter_QHS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Finite_Dihedral_Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Finite_Dihedral_Test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" beforeDir="false" afterPath="$PROJECT_DIR$/Infinite_Dihedral_Quotient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" beforeDir="false" afterPath="$PROJECT_DIR$/SL2C_Char_Var_Dim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Text_Processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auxiliary_Functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HakenQHS_Dihedral_Data.md" beforeDir="false" afterPath="$PROJECT_DIR$/HakenQHS_Dihedral_Data.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Haken_QHS_Data.md" beforeDir="false" afterPath="$PROJECT_DIR$/Haken_QHS_Data.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,30 +48,31 @@
     <option name="sortByType" value="true" />
     <option name="sortKey" value="BY_TYPE" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.Filter_QHS.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Infinite_Dihedral_Quotient.executor&quot;: &quot;Run&quot;,
-    &quot;Python.SL2C_Char_Var_Dim.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.Filter_QHS.executor": "Run",
+    "Python.Infinite_Dihedral_Quotient.executor": "Run",
+    "Python.SL2C_Char_Var_Dim.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Properties_Haken_HodgsonWeeks_Census" />
@@ -261,7 +259,23 @@
       <option name="project" value="LOCAL" />
       <updated>1773388910457</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Update Haken_List">
+      <option name="closed" value="true" />
+      <created>1773398810284</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1773398810284</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Update Haken_List">
+      <option name="closed" value="true" />
+      <created>1773398885465</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1773398885465</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
