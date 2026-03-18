@@ -47,6 +47,9 @@ def is_pos_b1_deg2cover(name):
     return sum_b1_deg2cover(name) > 0
 
 def write_double_cover_test(file_name):
+    """
+    The function perform the double cover test which checks if the sum of the first betti number in all double covers is positive. The function outputs the result of the test in the file 
+    """
     # read the content of HAKEN_QHS_DIHEDRAL_FILE
     with open(file_name, "r") as open_file:
         original_content = open_file.readlines()
