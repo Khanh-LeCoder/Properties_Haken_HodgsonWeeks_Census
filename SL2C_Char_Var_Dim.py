@@ -50,16 +50,22 @@ def write_eqn_data(input_file):
 
     print("Computed the character variety of", count, "manifold.")
 
+# Write the result of computing the defining ideal of the SL2C-character variety in the Equation_Data.md file
 write_eqn_data(HAKEN_QHS_FILE)
 
 def SL2_char_var_dim(ideal_char):
+    """
+    Compute the dimension of the SL2C-character variety given the defining ideal
+    """
     end_parenthesis_index = ideal_char.find(")")
     ideal = ideal_char[:end_parenthesis_index+1]
     ideal_input = ideal.replace("^","**")
     if ideal_char.find("Tc") == -1:
+        # Initialize the ambient polynomial ring
         R.<Ta,Tb,Tab> = PolynomialRing(QQ,3)
         ideal = eval(ideal_input)
     elif ideal_char.find("Tc") != -1:
+        # Initialize the ambient polynomial ring
         R.<Ta,Tb,Tc,Tab,Tac,Tbc,Tabc> = PolynomialRing(QQ, 7)
         ideal = eval(ideal_input)
     return ideal.dimension()
@@ -78,6 +84,7 @@ def write_dimension_data(file_name):
         eqn_table[name] = eqn
         qhs_list.append(name)
 
+    # Write the result of computing the character variety and the dimension in a single fule. 
     with open(CHAR_VAR_DATA, "w") as open_file:
         open_file.write("| Name | Equation | Dimension |\n|---|---|---|\n")
 
