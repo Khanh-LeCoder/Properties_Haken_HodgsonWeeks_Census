@@ -42,13 +42,13 @@ def sum_b1_deg2cover(name):
 
 def is_pos_b1_deg2cover(name):
     """
-    The function test if the manifold has positive sum of the first betti number of all double covers
+    The function tests if the manifold has positive sum of the first betti number of all double covers
     """
     return sum_b1_deg2cover(name) > 0
 
 def write_double_cover_test(file_name):
     """
-    The function perform the double cover test which checks if the sum of the first betti number in all double covers is positive. The function outputs the result of the test in the file 
+    The function performs the double cover test which checks if the sum of the first betti number in all double covers is positive. The function outputs the result of the test in the file HakenQHS_Dihedral_Data.md
     """
     # read the content of HAKEN_QHS_DIHEDRAL_FILE
     with open(file_name, "r") as open_file:
@@ -98,6 +98,9 @@ def eval_rel_Z2_hom(relations,hom):
     return [evaluate_Z2_hom(word,hom) for word in relations]
 
 def candidate_Z2_hom(num_generators):
+    """
+    Return a list of list of candidate homomorphism from a 2- or 3- generated group to the multiplicative group {1,-1}
+    """
     if num_generators == 2:
         return [[1,1],[1,-1],[-1,1],[-1,-1]]
     elif num_generators == 3:
@@ -110,19 +113,29 @@ def check_relations_Z2_hom(relations,hom):
     return check
 
 def find_Z2_hom(name):
+    """
+    Return the list of homomorphisms from a 2- or 3- generated group to the multiplicative group {1,-1}
+    """
+    # Compute the fundamental group of the manifold given by name
     M = snappy.Manifold(name)
     G = M.fundamental_group()
+
+    # Extract the list of relators
     relations = G.relators()
     num_generators = len(G.generators())
+
+    # Returns the homomorphism if all relations are satisfied
     return [hom for hom in candidate_Z2_hom(num_generators) if check_relations_Z2_hom(relations,hom)]
 
 def word_equation(word,hom):
     """
     Compute the equation defined by word given a homomorphism to the multiplicative group {1,-1}
-    Input:  A word in "a,b,A,B" or "a,b,c,A,B,C" and a candidate homomorphism given as a list of two strings or three strings
-    Output: A list of coefficients of
+    Input:  A word in "a,b,A,B" or "a,b,c,A,B,C" and a candidate homomorphism given as a list of two or three numbers
+    Output: A list of coefficients of the equation defined by requiring that word get sent to the identity affine map of the line. In particular, the translation part of the image of word has to be zero. 
     """
     prod = 1
+
+    # coeff_* denotes the translation of * as an affine map on the real line.
     coeff_a = 0
     coeff_b = 0
     coeff_c = 0
@@ -151,9 +164,17 @@ def word_equation(word,hom):
         return [coeff_a, coeff_b, coeff_c]
 
 def relations_equation(relations, hom):
+    """
+    Given a homomorphism hom to the multiplicative group {1,-1} and a list of relations as words in "a,b,A,B" or "a,b,c,A,B,C"
+    Returns the coefficient matrix of coefficients of the linear system imposed by the group relations to get a group homomorphism to the infinite dihedral group viewed as a sugbroup of the affine maps on the real line.
+    """
     return [word_equation(word,hom) for word in relations]
 
 def system_equations(name):
+    """
+    Given the name of a 3-manifold 
+    Returns the matrix of coefficients of the linear system imposed by the group relations to get a group homomorphism to the infinite dihedral group viewed as a sugbroup of the affine maps on the real line.
+    """
     M = snappy.Manifold(name)
     G = M.fundamental_group()
     relations = G.relators()
@@ -212,7 +233,7 @@ def s3_permute(tup):
 def candidate_hom(num_generators):
     """
     Input:  The number of generators of the group which is either 2 or 3
-    Output: The list candidate homomorphisms from the group to the infinite dihedral group
+    Output: The list candidate homomorphisms from the group to the infinite dihedral group. The output for the 3-generated case is determined by finding homomorphism obtained by solving linear systems coming the relations of groups from the list of Haken QHS. 
     """
     if num_generators == 2:
         return [["x","y"],["x","xy"],["xy","x"]]
@@ -241,13 +262,15 @@ def is_relations_hold(hom_relations):
 
 def is_Dinfty_quotient(name):
     """
-    Input:
-    Output:
+    Input:  The name of the 3-manifold 
+    Output: True if the manifold admits an infinite dihedral quotient coming from one of the homomorphism from hom_list and False otherwise.
     """
+    # Compute the fundamental group and relatos
     M = snappy.Manifold(name)
     G = M.fundamental_group()
     relations = G.relators()
 
+    # Initialize a list of candidate homomorphism depending of the number of generators of the fundamental group
     num_generators = len(G.generators())
     hom_list = candidate_hom(num_generators)
     check = False
