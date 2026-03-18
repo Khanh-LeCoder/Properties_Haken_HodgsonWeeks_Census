@@ -67,4 +67,5 @@ def write_QHS(file_name):
                 open_file.write(name + "\n")
     print("There are", count, "Haken QHS.")
 
+# Write the name of all QHS in the text file Haken_QHS_List.txt
 write_QHS(INITIAL_HAKEN_FILE)
